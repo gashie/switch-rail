@@ -1,0 +1,33 @@
+{
+  "name": "sika-rail",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20.0.0" },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "migrate": "node scripts/migrate.js",
+    "seed": "node scripts/seed.js",
+    "reset": "node scripts/reset.js",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "check-boundaries": "node scripts/check-boundaries.js"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "cookie-parser": "^1.4.7",
+    "express-fileupload": "^1.5.1",
+    "joi": "^17.13.3",
+    "pg": "^8.13.0",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.3.0",
+    "argon2": "^0.41.1",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.4",
+    "eslint": "^9.13.0",
+    "supertest": "^7.0.0"
+  }
+}
