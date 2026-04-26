@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.056.001.11">
+  <FIToFIPmtCxlReq>
+    <Assgnmt>
+      <Id>SAMPLE-CAMT056-001</Id>
+      <CreDtTm>2026-04-26T12:00:00Z</CreDtTm>
+    </Assgnmt>
+    <Undrlyg>
+      <TxInf>
+        <CxlId>CXL-001</CxlId>
+        <OrgnlEndToEndId>E2E-PACS008-001</OrgnlEndToEndId>
+        <OrgnlUETR>019dcad9-0000-7000-8000-000000000001</OrgnlUETR>
+        <OrgnlIntrBkSttlmAmt Ccy="GHS">150.00</OrgnlIntrBkSttlmAmt>
+        <CxlRsnInf>
+          <Rsn>
+            <Cd>DUPL</Cd>
+          </Rsn>
+          <AddtlInf>Duplicate transaction</AddtlInf>
+        </CxlRsnInf>
+        <OrgnlTxRef>
+          <Dbtr>
+            <Nm>KOFI MENSAH</Nm>
+          </Dbtr>
+          <DbtrAcct>
+            <Id>
+              <Othr>
+                <Id>0123456789</Id>
+              </Othr>
+            </Id>
+          </DbtrAcct>
+          <DbtrAgt>
+            <FinInstnId>
+              <BICFI>BANK01GHACX</BICFI>
+            </FinInstnId>
+          </DbtrAgt>
+          <Cdtr>
+            <Nm>AMA OWUSU</Nm>
+          </Cdtr>
+          <CdtrAcct>
+            <Id>
+              <Othr>
+                <Id>9876543210</Id>
+              </Othr>
+            </Id>
+          </CdtrAcct>
+          <CdtrAgt>
+            <FinInstnId>
+              <BICFI>BANK02GHACX</BICFI>
+            </FinInstnId>
+          </CdtrAgt>
+        </OrgnlTxRef>
+      </TxInf>
+    </Undrlyg>
+  </FIToFIPmtCxlReq>
+</Document>
