@@ -9,7 +9,7 @@ CC ticks `[ ]` to `[x]` itself when a block is committed. This file is the sourc
 Active phase. Spec: `PHASES/PHASE-1.md`.
 
 - [x] B1.1 — Repo init, package.json, scripts, .env.example, README
-- [ ] B1.2 — `core/db.js` (pg pool, withClient, withTransaction) + migration runner
+- [x] B1.2 — `core/db.js` (pg pool, withClient, withTransaction) + migration runner
 - [ ] B1.3 — `core/responses.js`, `core/errors.js`, `core/context.js`, `core/http.js`
 - [ ] B1.4 — `core/money.js` (BigInt money + currency), `core/uuid.js` (UUIDv7)
 - [ ] B1.5 — `core/crypto.js` (Ed25519, AES-256-GCM, hash chain) + `core/config.js`
@@ -141,6 +141,6 @@ Spec: written when Phase 1 ends.
 ## Status
 
 - **Current phase:** 1 — Foundation
-- **Current block:** B1.2 (not started)
-- **Tests passing:** 0
-- **Migrations applied:** 0
+- **Current block:** B1.3 (not started)
+- **Tests passing:** 5
+- **Migrations applied:** 1
