@@ -12,7 +12,7 @@ Active phase. Spec: `PHASES/PHASE-1.md`.
 - [x] B1.2 — `core/db.js` (pg pool, withClient, withTransaction) + migration runner
 - [x] B1.3 — `core/responses.js`, `core/errors.js`, `core/context.js`, `core/http.js`
 - [x] B1.4 — `core/money.js` (BigInt money + currency), `core/uuid.js` (UUIDv7)
-- [ ] B1.5 — `core/crypto.js` (Ed25519, AES-256-GCM, hash chain) + `core/config.js`
+- [x] B1.5 — `core/crypto.js` (Ed25519, AES-256-GCM, hash chain) + `core/config.js`
 - [ ] B1.6 — `core/baseCrud.js` (generic CRUD factory)
 - [ ] B1.7 — `modules/auth/` (cookie sessions, login, password hash with argon2, mTLS-ready)
 - [ ] B1.8 — `modules/audit/` (append-only event log with daily hash chain)
@@ -141,6 +141,6 @@ Spec: written when Phase 1 ends.
 ## Status
 
 - **Current phase:** 1 — Foundation
-- **Current block:** B1.5 (not started)
-- **Tests passing:** 52
+- **Current block:** B1.6 (not started)
+- **Tests passing:** 71
 - **Migrations applied:** 1
