@@ -32,7 +32,7 @@ Spec: written when Phase 1 ends.
 - [x] B2.5 — ISO 8583 adapter (1987/1993/2003 variants — bitmap parsing to envelope and back)
 - [x] B2.6 — SWIFT MT adapter (MT103, MT202)
 - [x] B2.7 — Bulk file adapter (CSV, XLSX, pain.001 — line-by-line to envelopes)
-- [ ] B2.8 — Phase 2 exit gate: round-trip tests for every format
+- [x] B2.8 — Phase 2 exit gate: round-trip tests for every format
 
 ---
 
@@ -140,7 +140,9 @@ Spec: written when Phase 1 ends.
 
 ## Status
 
-- **Current phase:** 2 — Message envelope & adapters
-- **Current block:** B2.8 (in progress)
+- **Current phase:** 2 — Message envelope & adapters (DONE)
+- **Current block:** B3.1 (Phase 3 master prompt awaited)
+- **Tests passing:** 229
+- **Migrations applied:** 6
 - **Tests passing:** 189
 - **Migrations applied:** 5

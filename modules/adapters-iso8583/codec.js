@@ -1,6 +1,7 @@
 // Minimal ISO 8583 codec — ASCII MTI + ASCII-hex bitmap (the mainstream
-// interchange profile). BCD/EBCDIC variants are not implemented in Phase 2;
-// the codec is parameterized so a future block can swap them in.
+// interchange profile). BCD and EBCDIC character-set variants are deferred
+// to a later phase; the codec is parameterized so a future block can swap
+// them in without disturbing the rest of the adapter.
 
 const setBit = (bitmap, bit) => {
   const byteIndex = Math.floor((bit - 1) / 8);
