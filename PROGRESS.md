@@ -14,7 +14,7 @@ Active phase. Spec: `PHASES/PHASE-1.md`.
 - [x] B1.4 — `core/money.js` (BigInt money + currency), `core/uuid.js` (UUIDv7)
 - [x] B1.5 — `core/crypto.js` (Ed25519, AES-256-GCM, hash chain) + `core/config.js`
 - [x] B1.6 — `core/baseCrud.js` (generic CRUD factory)
-- [ ] B1.7 — `modules/auth/` (cookie sessions, login, password hash with argon2, mTLS-ready)
+- [x] B1.7 — `modules/auth/` (cookie sessions, login, password hash with argon2, mTLS-ready)
 - [ ] B1.8 — `modules/audit/` (append-only event log with daily hash chain)
 - [ ] B1.9 — `modules/crypto-keys/` (HSM-backed key custody for participants — Ed25519 keypairs)
 - [ ] B1.10 — `scripts/check-boundaries.js` (anti-drift script) + `server.js` monolith assembly + Phase 1 exit gate
@@ -141,6 +141,6 @@ Spec: written when Phase 1 ends.
 ## Status
 
 - **Current phase:** 1 — Foundation
-- **Current block:** B1.7 (not started)
-- **Tests passing:** 86
-- **Migrations applied:** 1
+- **Current block:** B1.8 (not started)
+- **Tests passing:** 98
+- **Migrations applied:** 2

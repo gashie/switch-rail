@@ -14,5 +14,9 @@ export const config = Object.freeze({
   encryptionKey: required('ENCRYPTION_KEY'),
   operatorName: process.env.OPERATOR_NAME || 'Sika',
   countryCode: process.env.COUNTRY_CODE || 'GH',
-  currencyDefault: process.env.CURRENCY_DEFAULT || 'GHS'
+  currencyDefault: process.env.CURRENCY_DEFAULT || 'GHS',
+  // standalone-mode ports for `node modules/<n>/server.js`
+  authPort: Number(process.env.AUTH_PORT || 4001),
+  auditPort: Number(process.env.AUDIT_PORT || 4002),
+  cryptoKeysPort: Number(process.env.CRYPTO_KEYS_PORT || 4003)
 });

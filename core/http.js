@@ -30,6 +30,18 @@ export const validateQuery = (schema) => (req, _res, next) => {
 
 export const sendOk = (res, data, status = 200) => res.status(status).json(ok(data));
 
+const SESSION_COOKIE_DEFAULTS = Object.freeze({
+  httpOnly: true,
+  sameSite: 'lax',
+  signed: true,
+  path: '/'
+});
+
+export const setSessionCookie = (res, name, value, opts = {}) =>
+  res.cookie(name, value, { ...SESSION_COOKIE_DEFAULTS, ...opts });
+
+export const clearSessionCookie = (res, name) => res.clearCookie(name, { path: '/' });
+
 export const errorHandler = (err, _req, res, _next) => {
   if (err instanceof AppError) {
     return res.status(err.status).json(fail(err.code, err.message, err.details));
