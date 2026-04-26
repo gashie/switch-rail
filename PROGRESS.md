@@ -29,8 +29,8 @@ Spec: written when Phase 1 ends.
 - [x] B2.2 — Envelope persistence (table, model, idempotency-aware insert)
 - [x] B2.3 — REST/JSON adapter (in/out)
 - [x] B2.4 — ISO 20022 adapter (pacs.008, pacs.002, pacs.004 — XML to envelope and back)
-- [ ] B2.5 — ISO 8583 adapter (1987/1993/2003 variants — bitmap parsing to envelope and back)
-- [ ] B2.6 — SWIFT MT adapter (MT103, MT202)
+- [x] B2.5 — ISO 8583 adapter (1987/1993/2003 variants — bitmap parsing to envelope and back)
+- [x] B2.6 — SWIFT MT adapter (MT103, MT202)
 - [ ] B2.7 — Bulk file adapter (CSV, XLSX, pain.001 — line-by-line to envelopes)
 - [ ] B2.8 — Phase 2 exit gate: round-trip tests for every format
 
