@@ -26,7 +26,7 @@ Active phase. Spec: `PHASES/PHASE-1.md`.
 Spec: written when Phase 1 ends.
 
 - [x] B2.1 — Canonical envelope schema (Joi) + `modules/envelope/`
-- [ ] B2.2 — Envelope persistence (table, model, idempotency-aware insert)
+- [x] B2.2 — Envelope persistence (table, model, idempotency-aware insert)
 - [ ] B2.3 — REST/JSON adapter (in/out)
 - [ ] B2.4 — ISO 20022 adapter (pacs.008, pacs.002, pacs.004 — XML to envelope and back)
 - [ ] B2.5 — ISO 8583 adapter (1987/1993/2003 variants — bitmap parsing to envelope and back)
@@ -141,6 +141,6 @@ Spec: written when Phase 1 ends.
 ## Status
 
 - **Current phase:** 2 — Message envelope & adapters
-- **Current block:** B2.2 (in progress)
-- **Tests passing:** 147
-- **Migrations applied:** 4
+- **Current block:** B2.3 (in progress)
+- **Tests passing:** 157
+- **Migrations applied:** 5
