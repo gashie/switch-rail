@@ -10,7 +10,7 @@ and pay each other through it instantly, 24/7, in any format.
 - [`SPEC.md`](./SPEC.md) — what the rail is, what it does, the architecture.
 - [`PROGRESS.md`](./PROGRESS.md) — the source of truth for what is done and
   what is next.
-- [`PHASE-1.md`](./PHASE-1.md) — block-by-block detail for the active phase.
+- [`PHASES/PHASE-1.md`](./PHASES/PHASE-1.md) — block-by-block detail for Phase 1.
 
 ## Stack
 
