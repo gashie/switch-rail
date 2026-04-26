@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.12">
+  <CstmrCdtTrfInitn>
+    <GrpHdr>
+      <MsgId>PAIN001-BATCH-001</MsgId>
+      <CreDtTm>2026-04-26T10:00:00Z</CreDtTm>
+      <NbOfTxs>5</NbOfTxs>
+    </GrpHdr>
+    <PmtInf>
+      <PmtInfId>PMTINF-001</PmtInfId>
+      <PmtMtd>TRF</PmtMtd>
+      <Dbtr>
+        <Nm>ACME LTD</Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <Id>
+          <Othr>
+            <Id>1000000001</Id>
+          </Othr>
+        </Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId>
+          <BICFI>PAYROL01ACX</BICFI>
+        </FinInstnId>
+      </DbtrAgt>
+      <CdtTrfTxInf>
+        <PmtId>
+          <EndToEndId>PAIN001-TX-001</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="GHS">1500.00</InstdAmt>
+        </Amt>
+        <CdtrAgt>
+          <FinInstnId>
+            <BICFI>BANK02GHACX</BICFI>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm>EMPLOYEE 01</Nm>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <Othr>
+              <Id>9000000001</Id>
+            </Othr>
+          </Id>
+        </CdtrAcct>
+        <RmtInf>
+          <Ustrd>April salary 1</Ustrd>
+        </RmtInf>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <EndToEndId>PAIN001-TX-002</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="GHS">1600.00</InstdAmt>
+        </Amt>
+        <CdtrAgt>
+          <FinInstnId>
+            <BICFI>BANK02GHACX</BICFI>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm>EMPLOYEE 02</Nm>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <Othr>
+              <Id>9000000002</Id>
+            </Othr>
+          </Id>
+        </CdtrAcct>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <EndToEndId>PAIN001-TX-003</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="GHS">1700.00</InstdAmt>
+        </Amt>
+        <CdtrAgt>
+          <FinInstnId>
+            <BICFI>BANK02GHACX</BICFI>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm>EMPLOYEE 03</Nm>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <Othr>
+              <Id>9000000003</Id>
+            </Othr>
+          </Id>
+        </CdtrAcct>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <EndToEndId>PAIN001-TX-004</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="GHS">1800.00</InstdAmt>
+        </Amt>
+        <CdtrAgt>
+          <FinInstnId>
+            <BICFI>BANK02GHACX</BICFI>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm>EMPLOYEE 04</Nm>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <Othr>
+              <Id>9000000004</Id>
+            </Othr>
+          </Id>
+        </CdtrAcct>
+      </CdtTrfTxInf>
+      <CdtTrfTxInf>
+        <PmtId>
+          <EndToEndId>PAIN001-TX-005</EndToEndId>
+        </PmtId>
+        <Amt>
+          <InstdAmt Ccy="GHS">1900.00</InstdAmt>
+        </Amt>
+        <CdtrAgt>
+          <FinInstnId>
+            <BICFI>BANK02GHACX</BICFI>
+          </FinInstnId>
+        </CdtrAgt>
+        <Cdtr>
+          <Nm>EMPLOYEE 05</Nm>
+        </Cdtr>
+        <CdtrAcct>
+          <Id>
+            <Othr>
+              <Id>9000000005</Id>
+            </Othr>
+          </Id>
+        </CdtrAcct>
+      </CdtTrfTxInf>
+    </PmtInf>
+  </CstmrCdtTrfInitn>
+</Document>

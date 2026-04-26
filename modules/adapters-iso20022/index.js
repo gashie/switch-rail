@@ -9,3 +9,15 @@ export { parsePacs007Xml } from './pacs007.parser.js';
 export { formatPacs007Xml } from './pacs007.formatter.js';
 export { parseCamt056Xml } from './camt056.parser.js';
 export { formatCamt056Xml } from './camt056.formatter.js';
+// XML / money primitives — exposed for sibling adapters that build on the
+// same ISO 20022 parsing stack (e.g. modules/adapters-bulk/pain001.js).
+export {
+  parseXml,
+  buildXml,
+  text,
+  get,
+  minorToDecimal,
+  decimalToMinor,
+  compactObject,
+  ISO20022_NAMESPACES
+} from './xml.js';
