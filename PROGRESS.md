@@ -17,7 +17,7 @@ Active phase. Spec: `PHASES/PHASE-1.md`.
 - [x] B1.7 — `modules/auth/` (cookie sessions, login, password hash with argon2, mTLS-ready)
 - [x] B1.8 — `modules/audit/` (append-only event log with daily hash chain)
 - [x] B1.9 — `modules/crypto-keys/` (HSM-backed key custody for participants — Ed25519 keypairs)
-- [ ] B1.10 — `scripts/check-boundaries.js` (anti-drift script) + `server.js` monolith assembly + Phase 1 exit gate
+- [x] B1.10 — `scripts/check-boundaries.js` (anti-drift script) + `server.js` monolith assembly + Phase 1 exit gate
 
 ---
 
@@ -140,7 +140,7 @@ Spec: written when Phase 1 ends.
 
 ## Status
 
-- **Current phase:** 1 — Foundation
-- **Current block:** B1.10 (not started)
+- **Current phase:** 1 — Foundation (DONE)
+- **Current block:** B2.1 (Phase 2 master prompt awaited)
 - **Tests passing:** 125
 - **Migrations applied:** 4
