@@ -98,7 +98,7 @@ Spec: written when Phase 1 ends.
 - [x] B7.2 — Per-reason SLA enforcement with auto-uphold on timeout
 - [x] B7.3 — Evidence upload with cryptographic timestamping
 - [x] B7.4 — Adjudication engine (auto for clear-cut, route to human for ambiguous)
-- [ ] B7.5 — Auto-debit on outcome (settlement integration)
+- [x] B7.5 — Auto-debit on outcome (settlement integration)
 - [ ] B7.6 — Customer-facing case lookup + Phase 7 exit gate
 
 ---

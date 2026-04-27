@@ -19,7 +19,9 @@ import { createEvidenceController } from './evidence-controller.js';
 import { createDecisionModel } from './decision-model.js';
 import { createDecisionService } from './decision-service.js';
 import { createDecisionController } from './decision-controller.js';
-import { decisionBodySchema } from './schema.js';
+import { createSettlementService } from './settlement-service.js';
+import { createSettlementController } from './settlement-controller.js';
+import { decisionBodySchema, confirmSettlementBodySchema } from './schema.js';
 import { registerDefaultRunners } from './auto-resolver.js';
 
 // Register the four real B7.4 auto-resolver runners on module load. Each is a
@@ -57,9 +59,16 @@ const decisionService = createDecisionService({
   evidenceModel,
   disputesService: service
 });
+const settlementService = createSettlementService({
+  db,
+  casesModel: model,
+  decisionModel,
+  disputesService: service
+});
 const controller = createDisputesController({ service });
 const evidenceController = createEvidenceController({ evidenceService });
 const decisionController = createDecisionController({ decisionService });
+const settlementController = createSettlementController({ settlementService });
 
 const fileUpload = expressFileUpload({ limits: { fileSize: 25 * 1024 * 1024 } });
 
@@ -101,6 +110,17 @@ router.post(
   asyncHandler(decisionController.decide)
 );
 router.get('/:caseNumber/decisions', requireAuth, asyncHandler(decisionController.getDecision));
+router.post(
+  '/:caseNumber/confirm-settlement',
+  requireAuth,
+  validateBody(confirmSettlementBodySchema),
+  asyncHandler(settlementController.confirmSettlement)
+);
+router.post(
+  '/:caseNumber/settle-auto',
+  requireAuth,
+  asyncHandler(settlementController.settleAutoResolved)
+);
 
 export {
   router as default,
@@ -109,5 +129,6 @@ export {
   evidenceService,
   evidenceModel,
   decisionService,
-  decisionModel
+  decisionModel,
+  settlementService
 };

@@ -5,7 +5,8 @@ export {
   evidenceService as disputesEvidenceService,
   evidenceModel as disputesEvidenceModel,
   decisionService as disputesDecisionService,
-  decisionModel as disputesDecisionModel
+  decisionModel as disputesDecisionModel,
+  settlementService as disputesSettlementService
 } from './routes.js';
 export { createDisputesService } from './service.js';
 export { createDisputesModel } from './model.js';
@@ -13,6 +14,7 @@ export { createEvidenceService } from './evidence-service.js';
 export { createEvidenceModel } from './evidence-model.js';
 export { createDecisionService } from './decision-service.js';
 export { createDecisionModel } from './decision-model.js';
+export { createSettlementService } from './settlement-service.js';
 export { registerRunner, _resetRunners, registerDefaultRunners } from './auto-resolver.js';
 export {
   REASON_CODES,
