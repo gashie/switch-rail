@@ -112,7 +112,7 @@ Spec: written when Phase 1 ends.
 - [x] B8.5 — `modules/overlays-cashout/` (agent cash-out flow)
 - [x] B8.6 — `modules/overlays-refunds/` (cryptographically linked to original)
 - [x] B8.7 — `modules/overlays-escrow/` (hold + conditional release)
-- [ ] B8.8 — `modules/overlays-split/` (one debit, N atomic credits) + Phase 8 exit gate
+- [x] B8.8 — `modules/overlays-split/` (one debit, N atomic credits) + Phase 8 exit gate
 
 ---
 
@@ -140,7 +140,7 @@ Spec: written when Phase 1 ends.
 
 ## Status
 
-- **Current phase:** 7 — Disputes & adjudication (DONE)
-- **Current block:** B8.1 (Phase 8 master prompt awaited)
-- **Tests passing:** 662
-- **Migrations applied:** 35
+- **Current phase:** 8 — Overlay services (DONE)
+- **Current block:** B9.1 (Phase 9 master prompt awaited)
+- **Tests passing:** 725
+- **Migrations applied:** 43

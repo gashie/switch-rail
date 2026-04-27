@@ -36,6 +36,14 @@ import { networkGraphRoutes } from './modules/network-graph/index.js';
 import { fraudFlagsRoutes } from './modules/fraud-flags/index.js';
 import { fastTrackReversalRoutes } from './modules/fast-track-reversal/index.js';
 import { disputesRoutes } from './modules/disputes/index.js';
+import { overlaysR2pRoutes } from './modules/overlays-r2p/index.js';
+import { overlaysQrRoutes } from './modules/overlays-qr/index.js';
+import { overlaysMandatesRoutes } from './modules/overlays-mandates/index.js';
+import { overlaysBulkRoutes } from './modules/overlays-bulk/index.js';
+import { overlaysCashoutRoutes } from './modules/overlays-cashout/index.js';
+import { overlaysRefundsRoutes } from './modules/overlays-refunds/index.js';
+import { overlaysEscrowRoutes } from './modules/overlays-escrow/index.js';
+import { overlaysSplitRoutes } from './modules/overlays-split/index.js';
 
 export const buildApp = () => {
   const app = express();
@@ -85,6 +93,14 @@ export const buildApp = () => {
   app.use('/fraud-flags', fraudFlagsRoutes);
   app.use('/fast-track-reversal', fastTrackReversalRoutes);
   app.use('/disputes', disputesRoutes);
+  app.use('/r2p', overlaysR2pRoutes);
+  app.use('/qr', overlaysQrRoutes);
+  app.use('/mandates', overlaysMandatesRoutes);
+  app.use('/bulk', overlaysBulkRoutes);
+  app.use('/cashout', overlaysCashoutRoutes);
+  app.use('/refunds-overlay', overlaysRefundsRoutes);
+  app.use('/escrow', overlaysEscrowRoutes);
+  app.use('/splits', overlaysSplitRoutes);
   app.use(errorHandler);
 
   return app;

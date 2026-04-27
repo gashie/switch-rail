@@ -153,10 +153,14 @@ beforeEach(async () => {
 });
 
 describe('disputes — locked constants', () => {
-  it('exposes 8 reason codes with SLA windows', () => {
+  it('exposes the locked Phase 7 reason code set + Phase 8 overlay extensions', () => {
     expect(Object.keys(REASON_CODES).sort()).toEqual([
+      // Phase 7 — base 8.
       'DUPLICATE', 'FRAUD', 'GOODS_NOT_RECEIVED', 'REGULATORY',
-      'TECHNICAL', 'UNAUTHORIZED', 'WRONG_AMOUNT', 'WRONG_BENEFICIARY'
+      'TECHNICAL', 'UNAUTHORIZED', 'WRONG_AMOUNT', 'WRONG_BENEFICIARY',
+      // Phase 8 — overlay-specific extensions.
+      'ESCROW_RELEASE_DISPUTED', 'MANDATE_EXCESS', 'MANDATE_UNAUTHORIZED',
+      'R2P_DUPLICATE', 'REFUND_DUPLICATE'
     ].sort());
     for (const code of Object.values(REASON_CODES)) {
       expect(SLA_WINDOWS[code]).toBeTruthy();
