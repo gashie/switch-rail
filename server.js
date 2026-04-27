@@ -17,6 +17,11 @@ import { participantOnboardingRoutes } from './modules/participant-onboarding/in
 import { directoryRoutes } from './modules/directory/index.js';
 import { aliasesRoutes } from './modules/aliases/index.js';
 import { nameEnquiryRoutes } from './modules/name-enquiry/index.js';
+import { transactionsRoutes } from './modules/transactions/index.js';
+import { routingRoutes } from './modules/routing/index.js';
+import { participantSimulatorRoutes } from './modules/participant-simulator/index.js';
+import { creditLegRoutes } from './modules/credit-leg/index.js';
+import { transactionRecoveryWorker } from './modules/transaction-recovery/index.js';
 
 const app = express();
 app.use(express.json({ limit: '5mb' }));
@@ -46,8 +51,21 @@ app.use('/participant-onboarding', participantOnboardingRoutes);
 app.use('/directory', directoryRoutes);
 app.use('/aliases', aliasesRoutes);
 app.use('/name-enquiry', nameEnquiryRoutes);
+app.use('/transactions', transactionsRoutes);
+app.use('/routing', routingRoutes);
+app.use('/simulator', participantSimulatorRoutes);
+app.use('/credit-leg', creditLegRoutes);
 app.use(errorHandler);
 
-app.listen(config.port, () =>
-  console.log(`${config.operatorName} rail on :${config.port}`)
-);
+const server = app.listen(config.port, () => {
+  console.log(`${config.operatorName} rail on :${config.port}`);
+  transactionRecoveryWorker.start();
+});
+
+const shutdown = async (signal) => {
+  console.log(`received ${signal}, shutting down`);
+  await transactionRecoveryWorker.stop();
+  server.close(() => process.exit(0));
+};
+process.on('SIGINT', () => shutdown('SIGINT'));
+process.on('SIGTERM', () => shutdown('SIGTERM'));
