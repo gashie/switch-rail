@@ -107,7 +107,7 @@ Spec: written when Phase 1 ends.
 
 - [x] B8.1 — `modules/overlays-r2p/` (Request to Pay, payer authorization)
 - [x] B8.2 — `modules/overlays-qr/` (EMVCo static + dynamic QR)
-- [ ] B8.3 — `modules/overlays-mandates/` (recurring with caps, instant revoke)
+- [x] B8.3 — `modules/overlays-mandates/` (recurring with caps, instant revoke)
 - [ ] B8.4 — `modules/overlays-bulk/` (millions of lines, per-line response)
 - [ ] B8.5 — `modules/overlays-cashout/` (agent cash-out flow)
 - [ ] B8.6 — `modules/overlays-refunds/` (cryptographically linked to original)
