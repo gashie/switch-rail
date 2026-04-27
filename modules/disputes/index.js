@@ -1,10 +1,14 @@
 export {
   default as disputesRoutes,
   service as disputesService,
-  model as disputesModel
+  model as disputesModel,
+  evidenceService as disputesEvidenceService,
+  evidenceModel as disputesEvidenceModel
 } from './routes.js';
 export { createDisputesService } from './service.js';
 export { createDisputesModel } from './model.js';
+export { createEvidenceService } from './evidence-service.js';
+export { createEvidenceModel } from './evidence-model.js';
 export {
   REASON_CODES,
   SLA_WINDOWS,
