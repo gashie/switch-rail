@@ -334,3 +334,17 @@ EOD cutover takes a cutoverConfirmation token issued by an authorized operator â
 Atomic state-transition + side-effect issuance
 When a state transition must produce a side effect (receipt, statement, settlement entry), both happen in the same DB transaction. Proven in Phase 4 (CONFIRMED transition + receipt issuance) and again in recovery (CONFIRMED from PENDING_RECONCILIATION + receipt issuance).
 Phase 5 reuses the pattern: every successful credit leg posts to the ledger in the same transaction as the CONFIRMED state transition. EOD snapshot generation issues a hash-frozen statement in the same transaction as the day-rollover.
+Retroactive integration into earlier phases
+When a later phase needs to integrate into a module from an earlier phase (e.g. Phase 5 added ledger writes into Phase 4's orchestrator), the rule is:
+
+The earlier phase's tests must keep passing. No regression. If tests need updating to reflect new behavior, the test changes are additive â€” the original assertions still hold; new assertions are added.
+The earlier phase's public surface (index.js) must keep working. Other modules calling via the public surface must not need to change.
+The integration is documented in the new phase's PHASE-N.md under a "Retroactive Phase N integration" section.
+Audit: every retroactive call is wrapped in audit (<earlier-event>.with_<new-side-effect>) so operators can see the chain.
+
+If a retroactive integration would require breaking an earlier phase's public surface, that's an ESCALATION, not a silent rewrite.
+Phase 5 proved this works (Phase 4 orchestrator + recovery worker integrated cleanly with ledger). Phase 6 retroactively integrates fraud and sanctions at B4.2's stub points with the same discipline.
+Performance budget for in-line authorization
+Every check inside the authorization pipeline (Phase 4 B4.2 + Phase 6 fraud/sanctions/network-graph) has a hard latency budget. The whole pipeline must complete in under 100ms p95 for DOMESTIC_INSTANT transactions. Per-check budgets:
+Checkp95 budgetduplicates5msaccount-status5mssanctions15msfraud (rules)25msfraud (ML scoring hook)25msnetwork-graph (cache hit)10mslimits10msliquidity5ms
+Sum target: 100ms p95. Anything heavier must split into a fast path (in-line, deterministic) and a slow path (async, write-only). The slow path can flag for review or adjust reputation, but it does not block the wire.
