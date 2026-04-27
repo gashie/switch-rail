@@ -24,7 +24,14 @@ export const RAIL_CODES = Object.freeze({
   OPERATOR_KILL_SWITCH: 'OPERATOR_KILL_SWITCH',
   RAIL_INTERNAL_ERROR: 'RAIL_INTERNAL_ERROR',
   TIMEOUT: 'TIMEOUT',
-  UNREACHABLE: 'UNREACHABLE'
+  UNREACHABLE: 'UNREACHABLE',
+  // Phase 6 — fraud-stack rejection reasons. FRAUD_BLOCK fires when the
+  // composite rule/ML verdict is BLOCK; SANCTIONS_HIT fires on a strong
+  // sanctions/blacklist hit. Both map to ISO 20022 XT99 (proprietary)
+  // because fraud is operationally distinct from RR04 regulatory in dispute
+  // and reporting flows.
+  FRAUD_BLOCK: 'FRAUD_BLOCK',
+  SANCTIONS_HIT: 'SANCTIONS_HIT'
 });
 
 // Rail state → ISO 20022 transaction status code (used in pacs.002 TxSts).
@@ -58,7 +65,9 @@ export const REASON_TO_ISO_REASON = Object.freeze({
   OPERATOR_KILL_SWITCH: 'RR04',
   RAIL_INTERNAL_ERROR: 'XT99',
   TIMEOUT: 'XT99',
-  UNREACHABLE: 'XT99'
+  UNREACHABLE: 'XT99',
+  FRAUD_BLOCK: 'XT99',
+  SANCTIONS_HIT: 'XT99'
 });
 
 // Result categories for routing decisions (drives recovery vs. terminal).
@@ -86,7 +95,9 @@ export const REASON_TO_CATEGORY = Object.freeze({
   OPERATOR_KILL_SWITCH: 'TERMINAL_FAIL',
   RAIL_INTERNAL_ERROR: 'AMBIGUOUS',
   TIMEOUT: 'AMBIGUOUS',
-  UNREACHABLE: 'AMBIGUOUS'
+  UNREACHABLE: 'AMBIGUOUS',
+  FRAUD_BLOCK: 'TERMINAL_FAIL',
+  SANCTIONS_HIT: 'TERMINAL_FAIL'
 });
 
 export const isoStatusFor = (state) => STATE_TO_ISO_STATUS[state];

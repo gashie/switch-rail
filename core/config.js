@@ -48,6 +48,17 @@ export const config = Object.freeze({
   intradayCycleHours: Number(process.env.INTRADAY_CYCLE_HOURS || 4),
   reconBreakAgeSeconds: Number(process.env.RECON_BREAK_AGE_SECONDS || 900),
   reconFeedMode: process.env.RECON_FEED_MODE || 'fake',
+  // Phase 6 — fraud, sanctions, network-graph, fast-track-reversal
+  fraudPort: Number(process.env.FRAUD_PORT || 4501),
+  sanctionsPort: Number(process.env.SANCTIONS_PORT || 4502),
+  networkGraphPort: Number(process.env.NETWORK_GRAPH_PORT || 4503),
+  fraudFlagsPort: Number(process.env.FRAUD_FLAGS_PORT || 4504),
+  fastTrackReversalPort: Number(process.env.FAST_TRACK_REVERSAL_PORT || 4505),
+  fraudMlScorer: process.env.FRAUD_ML_SCORER || 'default',
+  fraudBaselineWindowDays: Number(process.env.FRAUD_BASELINE_WINDOW_DAYS || 90),
+  fraudFlagDefaultExpiryDays: Number(process.env.FRAUD_FLAG_EXPIRY_DAYS || 90),
+  fastTrackReversalWindowDays: Number(process.env.FAST_TRACK_REVERSAL_WINDOW_DAYS || 80),
+  fastTrackInvokeMonthlyQuota: Number(process.env.FAST_TRACK_INVOKE_MONTHLY_QUOTA || 1000),
   niaMode: process.env.NIA_MODE || 'fake',
   // Phase 4: when running tests we want short timeouts; production demo uses
   // the full 10s/2s budgets. Override with TX_TEST_MODE=true.
