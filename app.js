@@ -25,6 +25,7 @@ import { transactionReceiptsRoutes } from './modules/transaction-receipts/index.
 import { reversalsRoutes } from './modules/reversals/index.js';
 import { ledgerRoutes } from './modules/ledger/index.js';
 import { settlementRoutes } from './modules/settlement/index.js';
+import { liquidityRoutes } from './modules/liquidity/index.js';
 
 export const buildApp = () => {
   const app = express();
@@ -63,6 +64,7 @@ export const buildApp = () => {
   app.use('/reversals', reversalsRoutes);
   app.use('/ledger', ledgerRoutes);
   app.use('/settlement', settlementRoutes);
+  app.use('/liquidity', liquidityRoutes);
   app.use(errorHandler);
 
   return app;

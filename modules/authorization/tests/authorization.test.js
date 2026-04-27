@@ -152,8 +152,15 @@ describe('authorization — individual checks', () => {
     expect(fraud()).toMatchObject({ pass: true, score: 0 });
   });
 
-  it('liquidity: returns pass (Phase 5 fills)', () => {
-    expect(liquidity()).toEqual({ pass: true, position: null });
+  it('liquidity: returns pass when no limits configured', async () => {
+    const r = await liquidity({
+      transaction: {
+        originator_participant: 'AUTHTESTNOLIM',
+        amount_currency: 'GHS',
+        amount_value: '1000'
+      }
+    });
+    expect(r.pass).toBe(true);
   });
 });
 
