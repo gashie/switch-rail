@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { uuidv7 } from '../../../core/uuid.js';
 import {
   createAuthorizationService,
   PIPELINE,
@@ -14,15 +15,18 @@ import {
 
 const baseCtx = (overrides = {}) => ({
   transaction: {
-    id: 'tx-uuid',
+    id: uuidv7(),
     originator_participant: 'BANK01',
     beneficiary_participant: 'BANK02',
+    originator_account: 'AUTHTESTACCT',
+    beneficiary_account: 'AUTHTESTBENE',
     amount_value: '15000',
     amount_currency: 'GHS',
     end_to_end_id: 'e2e-1'
   },
-  originatorAccount: { id: 'acct-orig', status: 'active' },
-  beneficiaryAccount: { id: 'acct-bene', status: 'active' },
+  skipFraudPersistence: true,
+  originatorAccount: { id: uuidv7(), status: 'active' },
+  beneficiaryAccount: { id: uuidv7(), status: 'active' },
   recentMatchingE2E: [],
   dailyVolumeMinor: 0n,
   monthlyVolumeMinor: 0n,
@@ -148,8 +152,9 @@ describe('authorization — individual checks', () => {
     expect(r.framework.originatorScreened).toBe('BANK01');
   });
 
-  it('fraud: returns pass with score 0 (Phase 6 fills)', () => {
-    expect(fraud()).toMatchObject({ pass: true, score: 0 });
+  it('fraud: returns pass with score 0 when called with no transaction', async () => {
+    const r = await fraud({});
+    expect(r).toMatchObject({ pass: true, score: 0 });
   });
 
   it('liquidity: returns pass when no limits configured', async () => {

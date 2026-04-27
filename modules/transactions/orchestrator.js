@@ -134,6 +134,7 @@ const fetchAuthContext = async (client, { transaction, originatorParticipant }) 
 
   return {
     transaction,
+    client,
     originatorAccount,
     beneficiaryAccount,
     recentMatchingE2E,

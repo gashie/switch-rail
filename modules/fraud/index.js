@@ -26,3 +26,8 @@ export { createRuleContextBuilder } from './rule-context-builder.js';
 export { createBaselineService } from './baseline-service.js';
 export { createBaselineModel } from './baseline-model.js';
 export { createBaselineWorker } from './baseline-worker.js';
+export { createFraudEngine, computeComposite } from './engine.js';
+export { extractFeatures, FEATURE_ORDER } from './ml/feature-extractor.js';
+export { getScorer, registerScorer } from './ml/scorer.js';
+export { defaultScorer } from './ml/scorer-default.js';
+export { runnerFor, RUNNERS } from './rule-runners/index.js';
