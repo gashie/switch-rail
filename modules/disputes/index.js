@@ -15,6 +15,10 @@ export { createEvidenceModel } from './evidence-model.js';
 export { createDecisionService } from './decision-service.js';
 export { createDecisionModel } from './decision-model.js';
 export { createSettlementService } from './settlement-service.js';
+export {
+  createCustomerPortalService,
+  createPortalModel
+} from './customer-portal-service.js';
 export { registerRunner, _resetRunners, registerDefaultRunners } from './auto-resolver.js';
 export {
   REASON_CODES,

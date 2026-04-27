@@ -99,7 +99,7 @@ Spec: written when Phase 1 ends.
 - [x] B7.3 — Evidence upload with cryptographic timestamping
 - [x] B7.4 — Adjudication engine (auto for clear-cut, route to human for ambiguous)
 - [x] B7.5 — Auto-debit on outcome (settlement integration)
-- [ ] B7.6 — Customer-facing case lookup + Phase 7 exit gate
+- [x] B7.6 — Customer-facing case lookup + Phase 7 exit gate
 
 ---
 
@@ -140,7 +140,7 @@ Spec: written when Phase 1 ends.
 
 ## Status
 
-- **Current phase:** 6 — Fraud & risk in line (DONE)
-- **Current block:** B7.1 (Phase 7 master prompt awaited)
-- **Tests passing:** 612
-- **Migrations applied:** 32
+- **Current phase:** 7 — Disputes & adjudication (DONE)
+- **Current block:** B8.1 (Phase 8 master prompt awaited)
+- **Tests passing:** 662
+- **Migrations applied:** 35

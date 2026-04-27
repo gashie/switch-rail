@@ -21,7 +21,17 @@ import { createDecisionService } from './decision-service.js';
 import { createDecisionController } from './decision-controller.js';
 import { createSettlementService } from './settlement-service.js';
 import { createSettlementController } from './settlement-controller.js';
-import { decisionBodySchema, confirmSettlementBodySchema } from './schema.js';
+import {
+  createPortalModel,
+  createCustomerPortalService
+} from './customer-portal-service.js';
+import { createCustomerPortalController } from './customer-portal-controller.js';
+import {
+  decisionBodySchema,
+  confirmSettlementBodySchema,
+  portalQuerySchema,
+  portalCommentBodySchema
+} from './schema.js';
 import { registerDefaultRunners } from './auto-resolver.js';
 
 // Register the four real B7.4 auto-resolver runners on module load. Each is a
@@ -65,14 +75,36 @@ const settlementService = createSettlementService({
   decisionModel,
   disputesService: service
 });
+const portalModel = createPortalModel();
+const portalService = createCustomerPortalService({
+  db,
+  casesModel: model,
+  evidenceModel,
+  portalModel
+});
 const controller = createDisputesController({ service });
 const evidenceController = createEvidenceController({ evidenceService });
 const decisionController = createDecisionController({ decisionService });
 const settlementController = createSettlementController({ settlementService });
+const portalController = createCustomerPortalController({ portalService });
 
 const fileUpload = expressFileUpload({ limits: { fileSize: 25 * 1024 * 1024 } });
 
 const router = Router();
+
+// Public-facing customer portal routes — registered first so they don't get
+// shadowed by the requireAuth-protected `/:caseNumber` routes below. No
+// requireAuth middleware: customer is identified by case number + fingerprint.
+router.get(
+  '/portal/:caseNumber',
+  validateQuery(portalQuerySchema),
+  asyncHandler(portalController.lookup)
+);
+router.post(
+  '/portal/:caseNumber/comments',
+  validateBody(portalCommentBodySchema),
+  asyncHandler(portalController.comment)
+);
 
 router.post('/', requireAuth, validateBody(fileBodySchema), asyncHandler(controller.file));
 router.get('/', requireAuth, validateQuery(listQuerySchema), asyncHandler(controller.list));

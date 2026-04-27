@@ -35,6 +35,7 @@ import { sanctionsRoutes } from './modules/sanctions/index.js';
 import { networkGraphRoutes } from './modules/network-graph/index.js';
 import { fraudFlagsRoutes } from './modules/fraud-flags/index.js';
 import { fastTrackReversalRoutes } from './modules/fast-track-reversal/index.js';
+import { disputesRoutes } from './modules/disputes/index.js';
 
 export const buildApp = () => {
   const app = express();
@@ -83,6 +84,7 @@ export const buildApp = () => {
   app.use('/network-graph', networkGraphRoutes);
   app.use('/fraud-flags', fraudFlagsRoutes);
   app.use('/fast-track-reversal', fastTrackReversalRoutes);
+  app.use('/disputes', disputesRoutes);
   app.use(errorHandler);
 
   return app;
