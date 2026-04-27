@@ -115,5 +115,21 @@ export const createParticipantsService = ({ db, model }) => ({
       const row = await model.findByCode(client, code);
       if (!row) throw new AppError('NOT_FOUND', `participant ${code} not found`, 404);
       return cryptoKeysService.listActive({ ownerType: 'participant', ownerId: code });
-    })
+    }),
+
+  // Internal-use status mutation, called by participant-onboarding during the
+  // KYB → certifying → active workflow. Public PATCH /participants/:code does
+  // NOT accept status — that goes through the onboarding state machine.
+  setStatus: (code, { status, certifiedAt, activatedAt, suspendedAt }, client) => {
+    const data = { status };
+    if (certifiedAt !== undefined) data.certified_at = certifiedAt;
+    if (activatedAt !== undefined) data.activated_at = activatedAt;
+    if (suspendedAt !== undefined) data.suspended_at = suspendedAt;
+    const run = async (c) => {
+      const updated = await model.updateByCode(c, code, data);
+      if (!updated) throw new AppError('NOT_FOUND', `participant ${code} not found`, 404);
+      return updated;
+    };
+    return client && typeof client.query === 'function' ? run(client) : db.withTransaction(run);
+  }
 });
