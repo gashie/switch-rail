@@ -28,7 +28,8 @@ export const createTransactionsModel = () => ({
       beneficiaryParticipant,
       beneficiaryAccount,
       amountValue,
-      amountCurrency
+      amountCurrency,
+      operatingDate
     }
   ) => {
     const r = await client.query(
@@ -36,12 +37,12 @@ export const createTransactionsModel = () => ({
         id, envelope_id, end_to_end_id, state, rail_class,
         originator_participant, originator_account,
         beneficiary_participant, beneficiary_account,
-        amount_value, amount_currency
+        amount_value, amount_currency, operating_date
       ) VALUES (
         $1, $2, $3, $4, $5,
         $6, $7,
         $8, $9,
-        $10, $11
+        $10, $11, $12
       )
       ON CONFLICT (envelope_id) WHERE original_transaction_id IS NULL DO NOTHING
       RETURNING ${TX_COLS}`,
@@ -56,7 +57,8 @@ export const createTransactionsModel = () => ({
         beneficiaryParticipant,
         beneficiaryAccount,
         amountValue,
-        amountCurrency
+        amountCurrency,
+        operatingDate || new Date().toISOString().slice(0, 10)
       ]
     );
     return r.rows[0] || null;
@@ -76,7 +78,8 @@ export const createTransactionsModel = () => ({
       beneficiaryAccount,
       amountValue,
       amountCurrency,
-      originalTransactionId
+      originalTransactionId,
+      operatingDate
     }
   ) => {
     const r = await client.query(
@@ -84,12 +87,14 @@ export const createTransactionsModel = () => ({
         id, envelope_id, end_to_end_id, state, rail_class,
         originator_participant, originator_account,
         beneficiary_participant, beneficiary_account,
-        amount_value, amount_currency, original_transaction_id
+        amount_value, amount_currency, original_transaction_id,
+        operating_date
       ) VALUES (
         $1, $2, $3, $4, $5,
         $6, $7,
         $8, $9,
-        $10, $11, $12
+        $10, $11, $12,
+        $13
       )
       RETURNING ${TX_COLS}`,
       [
@@ -104,7 +109,8 @@ export const createTransactionsModel = () => ({
         beneficiaryAccount,
         amountValue,
         amountCurrency,
-        originalTransactionId
+        originalTransactionId,
+        operatingDate || new Date().toISOString().slice(0, 10)
       ]
     );
     return r.rows[0];

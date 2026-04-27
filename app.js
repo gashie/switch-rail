@@ -27,6 +27,7 @@ import { ledgerRoutes } from './modules/ledger/index.js';
 import { settlementRoutes } from './modules/settlement/index.js';
 import { liquidityRoutes } from './modules/liquidity/index.js';
 import { settlementCycleRoutes } from './modules/settlement-cycle/index.js';
+import { eodRoutes } from './modules/eod/index.js';
 
 export const buildApp = () => {
   const app = express();
@@ -67,6 +68,7 @@ export const buildApp = () => {
   app.use('/settlement', settlementRoutes);
   app.use('/liquidity', liquidityRoutes);
   app.use('/settlement-cycle', settlementCycleRoutes);
+  app.use('/eod', eodRoutes);
   app.use(errorHandler);
 
   return app;

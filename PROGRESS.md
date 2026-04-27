@@ -72,7 +72,7 @@ Spec: written when Phase 1 ends.
 - [x] B5.2 — `modules/settlement/` (real-time positions per participant)
 - [x] B5.3 — `modules/liquidity/` (floors, ceilings, throttle/block on floor breach, prefunding top-up)
 - [x] B5.4 — Settlement cycles (intraday net cycles, RTGS-linked high-value, programmable windows)
-- [ ] B5.5 — `modules/eod/` (cutover, settlement report generation, snapshot, hash freeze, day rollover)
+- [x] B5.5 — `modules/eod/` (cutover, settlement report generation, snapshot, hash freeze, day rollover)
 - [ ] B5.6 — `modules/reconciliation/` (continuous + EOD recon, exception queue)
 - [ ] B5.7 — `modules/fees/` (per-class fee schedules, accrual at authorization, settlement netting)
 - [ ] B5.8 — Phase 5 exit gate: full day simulation with multiple cycles + EOD
