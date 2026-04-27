@@ -6,6 +6,8 @@ const TX_COLS = `id, envelope_id, end_to_end_id, state, rail_class,
   authorized_at, routed_at, credit_leg_started_at,
   confirmed_at, rejected_at, reversed_at, failed_at,
   reversal_transaction_id, original_transaction_id,
+  attempts, next_attempt_at, retry_policy_name,
+  operating_date, fee_minor, fee_schedule_id,
   created_at, updated_at`;
 
 const HISTORY_COLS = `id, transaction_id, from_state, to_state,
@@ -251,6 +253,17 @@ export const createTransactionsModel = () => ({
     await client.query(
       `UPDATE transactions SET rail_class = $2, updated_at = now() WHERE id = $1`,
       [id, railClass]
+    );
+  },
+
+  setFee: async (client, id, feeMinor, feeScheduleId) => {
+    await client.query(
+      `UPDATE transactions
+          SET fee_minor = $2,
+              fee_schedule_id = $3,
+              updated_at = now()
+        WHERE id = $1`,
+      [id, String(feeMinor), feeScheduleId || null]
     );
   },
 

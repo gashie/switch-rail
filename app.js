@@ -29,6 +29,7 @@ import { liquidityRoutes } from './modules/liquidity/index.js';
 import { settlementCycleRoutes } from './modules/settlement-cycle/index.js';
 import { eodRoutes } from './modules/eod/index.js';
 import { reconciliationRoutes } from './modules/reconciliation/index.js';
+import { feesRoutes } from './modules/fees/index.js';
 
 export const buildApp = () => {
   const app = express();
@@ -71,6 +72,7 @@ export const buildApp = () => {
   app.use('/settlement-cycle', settlementCycleRoutes);
   app.use('/eod', eodRoutes);
   app.use('/reconciliation', reconciliationRoutes);
+  app.use('/fees', feesRoutes);
   app.use(errorHandler);
 
   return app;

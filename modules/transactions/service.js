@@ -197,6 +197,8 @@ export const createTransactionsService = ({ db, model }) => {
     _internal: {
       insertReversal: (client, args) => model.insertReversal(client, args),
       setRailClass: (client, id, railClass) => model.setRailClass(client, id, railClass),
+      setFee: (client, id, feeMinor, feeScheduleId) =>
+        model.setFee(client, id, feeMinor, feeScheduleId),
       countRecentByOriginatorAndE2E: (client, args) =>
         model.countRecentByOriginatorAndE2E(client, args),
       sumVolumeForOriginator: (client, args) => model.sumVolumeForOriginator(client, args),

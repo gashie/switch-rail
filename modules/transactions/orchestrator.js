@@ -8,6 +8,7 @@ import { railOrchestrationService } from '../rail-orchestration/index.js';
 import { creditLegService } from '../credit-leg/index.js';
 import { transactionReceiptsService } from '../transaction-receipts/index.js';
 import { ledgerService, ACCOUNT_TYPES, JOURNAL_REASONS, accountCodeFor } from '../ledger/index.js';
+import { feesService } from '../fees/index.js';
 // Importing settlement here is intentional — it registers the
 // applyJournalToPositions hook on the ledger as a side effect of module
 // load. The orchestrator is the load-bearing path for ledger writes, so
@@ -34,9 +35,6 @@ const operatingDateFor = (tx) => {
 
 const postConfirmedJournal = async (client, tx) => {
   const currency = tx.amount_currency;
-  // Make sure both PARTICIPANT_SETTLEMENT accounts exist before posting.
-  // ensureAccountOnClient is idempotent so the same payment can be retried
-  // through the orchestrator without account-creation errors.
   await ledgerService._internal.ensureAccountOnClient(client, {
     accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
     ownerId: tx.originator_participant,
@@ -47,36 +45,46 @@ const postConfirmedJournal = async (client, tx) => {
     ownerId: tx.beneficiary_participant,
     currency
   });
-  const amount = String(tx.amount_value);
+  const amount = BigInt(tx.amount_value);
+  const fee = BigInt(tx.fee_minor || 0);
+  const totalDebit = amount + fee;
+  const origAccount = accountCodeFor({
+    accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
+    ownerId: tx.originator_participant,
+    currency
+  });
+  const beneAccount = accountCodeFor({
+    accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
+    ownerId: tx.beneficiary_participant,
+    currency
+  });
   const entries = [
-    {
-      accountCode: accountCodeFor({
-        accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
-        ownerId: tx.originator_participant,
-        currency
-      }),
-      side: 'DR',
-      amount,
-      currency
-    },
-    {
-      accountCode: accountCodeFor({
-        accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
-        ownerId: tx.beneficiary_participant,
-        currency
-      }),
-      side: 'CR',
-      amount,
-      currency
-    }
+    { accountCode: origAccount, side: 'DR', amount: String(totalDebit), currency },
+    { accountCode: beneAccount, side: 'CR', amount: String(amount), currency }
   ];
+  if (fee > 0n) {
+    await ledgerService._internal.ensureAccountOnClient(client, {
+      accountType: ACCOUNT_TYPES.RAIL_FEE_REVENUE,
+      currency
+    });
+    entries.push({
+      accountCode: accountCodeFor({ accountType: ACCOUNT_TYPES.RAIL_FEE_REVENUE, currency }),
+      side: 'CR',
+      amount: String(fee),
+      currency
+    });
+  }
   return ledgerService.postJournal(client, {
     reason: JOURNAL_REASONS.TRANSACTION_CONFIRMED,
     referenceType: 'transaction',
     referenceId: tx.id,
     operatingDate: operatingDateFor(tx),
     entries,
-    metadata: { endToEndId: tx.end_to_end_id, railClass: tx.rail_class }
+    metadata: {
+      endToEndId: tx.end_to_end_id,
+      railClass: tx.rail_class,
+      feeMinor: String(fee)
+    }
   });
 };
 
@@ -220,6 +228,19 @@ export const createOrchestrator = ({ db, transactionsService }) => {
           occurredBy: 'system',
           payload: { authResult }
         });
+
+        // 3a. Stamp the fee at AUTHORIZED. Defaults to 0 if no schedule
+        // matches; the journal will then be 2-leg without a fee leg.
+        const feeResult = await feesService.calculateFee({
+          railClass: tx.rail_class,
+          currency: tx.amount_currency,
+          amountMinor: String(tx.amount_value),
+          client
+        });
+        if (feeResult.feeMinor !== '0' || feeResult.scheduleId) {
+          await _txService._internal.setFee(client, tx.id, feeResult.feeMinor, feeResult.scheduleId);
+          tx = await _txService.findById(tx.id, client);
+        }
 
         // 4. Routing — beneficiary participant exists + active
         const route = await validateRouting(envelope);
