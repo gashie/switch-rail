@@ -364,3 +364,24 @@ Window enforcement happens at file-time and at adjudication-clock-tick time. The
 One workflow ≠ one process
 A workflow may have an automated path and a manual path. Phase 6 fast-track is the proof: 95%+ of fraud cases follow the automated freeze→confirm path; ambiguous cases route to operator manual confirm. Phase 7 disputes follow the same: clear-cut auto-resolution (e.g. proven duplicate transaction with matching idempotency markers) skips human review; ambiguous cases route to adjudicators.
 The split point is the dispute reason and the strength of the evidence. Auto-resolution is conservative — when in doubt, route to a human. Audit-event-then-operator-confirm rule still applies to the money-movement step.
+
+Audit log as queryable source-of-truth
+The audit log is not just a write-only history. It is a queryable source-of-truth for after-the-fact reasoning. When a later workflow needs to know "did event X happen for entity Y at time Z", querying audit_events by event_type + resource_type + resource_id + occurred_at range is the canonical answer.
+Phase 7 proved this: the r-wrong-beneficiary auto-resolver reaches into audit_events to find cop.executed events for the original transaction, then inspects their payloads to determine if the customer overrode a no-match warning.
+This pattern applies to:
+
+Phase 9 cross-border: was sanctions screening done at the foreign-rail leg?
+Future SAR/STR filing: timeline reconstruction from audit_events
+Regulator console (Phase 10): all queries route through audit_events as the lookup index
+
+Audit events are therefore part of the public contract of every module, not an implementation detail. Adding or renaming an event_type is a breaking change.
+Overlay rule: every overlay is a thin layer on the core transaction lifecycle
+Phase 8 builds 8 overlay services (R2P, QR, mandates, bulk, cash-out, refunds, escrow, split). Each one takes a customer-facing concept (a "request to pay", a "QR code", a "recurring mandate") and turns it into one or more standard transactions through the existing Phase 4 transaction lifecycle.
+The rule: overlays do not reinvent payment primitives. They reuse:
+
+transactions/orchestrator.processTransaction(envelope) for any money movement
+The standard envelope shape (msgType extensions are the only addition)
+The standard fraud, sanctions, liquidity, and ledger flows
+The standard dispute reason codes (with overlay-specific reasons added to the locked taxonomy)
+
+If an overlay seems to need to bypass the orchestrator, that's an ESCALATION — the overlay should be implemented as a chain of standard transactions, not as a parallel money-movement path.
