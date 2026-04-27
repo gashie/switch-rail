@@ -8,6 +8,9 @@ import { createRulesModel } from './rules-model.js';
 import { createRulesService } from './rules-service.js';
 import { createSignalsModel } from './signals-model.js';
 import { createSignalsService } from './signals-service.js';
+import { createBaselineModel } from './baseline-model.js';
+import { createBaselineService } from './baseline-service.js';
+import { createBaselineWorker } from './baseline-worker.js';
 import { createRuleContextBuilder } from './rule-context-builder.js';
 import { createFraudController } from './controller.js';
 
@@ -15,7 +18,14 @@ const rulesModel = createRulesModel();
 const rulesService = createRulesService({ db, model: rulesModel });
 const signalsModel = createSignalsModel();
 const signalsService = createSignalsService({ db, model: signalsModel });
-const ruleContextBuilder = createRuleContextBuilder({ db, directoryService });
+const baselineModel = createBaselineModel();
+const baselineService = createBaselineService({ db, model: baselineModel });
+const baselineWorker = createBaselineWorker({ baselineService });
+const ruleContextBuilder = createRuleContextBuilder({
+  db,
+  directoryService,
+  baselineModel
+});
 const controller = createFraudController({ rulesService, signalsService });
 
 const router = Router();
@@ -38,5 +48,8 @@ export {
   rulesModel,
   signalsService,
   signalsModel,
+  baselineService,
+  baselineModel,
+  baselineWorker,
   ruleContextBuilder
 };

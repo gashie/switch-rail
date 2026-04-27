@@ -4,6 +4,9 @@ export {
   rulesModel as fraudRulesModel,
   signalsService as fraudSignalsService,
   signalsModel as fraudSignalsModel,
+  baselineService as fraudBaselineService,
+  baselineModel as fraudBaselineModel,
+  baselineWorker as fraudBaselineWorker,
   ruleContextBuilder as fraudRuleContextBuilder
 } from './routes.js';
 export {
@@ -20,3 +23,6 @@ export { createRulesModel } from './rules-model.js';
 export { createSignalsService } from './signals-service.js';
 export { createSignalsModel } from './signals-model.js';
 export { createRuleContextBuilder } from './rule-context-builder.js';
+export { createBaselineService } from './baseline-service.js';
+export { createBaselineModel } from './baseline-model.js';
+export { createBaselineWorker } from './baseline-worker.js';

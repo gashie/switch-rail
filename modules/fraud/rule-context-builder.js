@@ -82,7 +82,7 @@ const accountAgeDays = (account) => {
   return Math.max(0, Math.floor((Date.now() - new Date(account.created_at).getTime()) / 86_400_000));
 };
 
-export const createRuleContextBuilder = ({ db, directoryService }) => {
+export const createRuleContextBuilder = ({ db, directoryService, baselineModel }) => {
   const buildContext = async ({ transaction, envelope, client, signals: signalOverride }) => {
     const runOn = async (c) => {
       const [velocity, firstTime] = await Promise.all([
@@ -111,6 +111,14 @@ export const createRuleContextBuilder = ({ db, directoryService }) => {
           .catch(() => null)
       ]);
 
+      // Baseline lookup (B6.2). Falls back to null when not yet computed.
+      let baseline = null;
+      if (baselineModel && origAccount) {
+        baseline = await baselineModel
+          .findByAccountCurrency(c, origAccount.id, transaction.amount_currency)
+          .catch(() => null);
+      }
+
       return {
         transaction,
         envelope: envelope || null,
@@ -118,7 +126,7 @@ export const createRuleContextBuilder = ({ db, directoryService }) => {
           account: origAccount,
           participant: transaction.originator_participant,
           accountAgeDays: accountAgeDays(origAccount),
-          baseline: null
+          baseline
         },
         beneficiary: {
           account: beneAccount,

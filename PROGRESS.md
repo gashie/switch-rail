@@ -82,7 +82,7 @@ Spec: written when Phase 1 ends.
 ## Phase 6 — Fraud & risk in line (autonomous)
 
 - [x] B6.1 — `modules/fraud/` (rules engine: velocity, geo, time, amount, new-beneficiary)
-- [ ] B6.2 — Behavioral baselines per account
+- [x] B6.2 — Behavioral baselines per account
 - [ ] B6.3 — ML scoring hook (model interface, feature extractor; model itself is plugin)
 - [ ] B6.4 — `modules/sanctions/` (OFAC, UN, EU, BoG, FIC lists; PEP screening)
 - [ ] B6.5 — `modules/network-graph/` (mule ring detection, structuring, coordinated attacks)
