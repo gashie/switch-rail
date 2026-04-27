@@ -226,3 +226,43 @@ wait $SERVER_PID 2>/dev/null || true
 ```
 
 Phase demo scripts (`scripts/demo-phase-N.sh`) all follow this pattern.
+
+he idempotent insert pattern — canonical from Phase 2
+Whenever a module needs idempotent insert behavior on a unique key (envelopes, transactions, settlement positions, dispute cases, etc.), use the INSERT … ON CONFLICT DO NOTHING RETURNING pattern. Do NOT use SELECT FOR UPDATE then conditional INSERT — it's two round-trips and has race window edge cases.
+Canonical shape:
+js// inside service.js, called within withTransaction
+const inserted = await client.query(
+  `INSERT INTO things (id, idempotency_key, ...)
+   VALUES ($1, $2, ...)
+   ON CONFLICT (originator_participant, idempotency_key) DO NOTHING
+   RETURNING *`,
+  [id, key, ...]
+);
+
+if (inserted.rows.length === 1) {
+  return { row: inserted.rows[0], deduped: false };
+}
+
+// conflict — fetch and content-check
+const existing = await client.query(
+  `SELECT * FROM things WHERE originator_participant = $1 AND idempotency_key = $2`,
+  [participant, key]
+);
+
+if (!contentMatches(existing.rows[0], incoming)) {
+  throw new AppError('IDEMPOTENCY_CONFLICT', 'duplicate key with different content', 409);
+}
+
+return { row: existing.rows[0], deduped: true };
+Content-match scope is the immutable identity bits — for envelopes that's amount + originator + beneficiary. Reference, remittance, and metadata may legitimately vary on retry.
+Cross-module utility sharing — explicit index.js re-export
+If module A has a utility (e.g. an XML parser, a money formatter, a fee calculator) that module B legitimately needs, A's index.js re-exports it as part of A's public surface. B imports from '../A/index.js'. Never reaches into '../A/internal.js'.
+This is the only way to share utilities across modules. The boundary checker enforces it.
+The stripVolatile test helper
+For round-trip tests where some fields are rail-assigned (e.g. envelopeId, createdAt, signature), use a shared helper to strip them before comparison:
+js// tests/helpers/stripVolatile.js
+export const stripVolatile = (env) => {
+  const { envelopeId, createdAt, signature, ...rest } = env;
+  return rest;
+};
+Located at tests/helpers/stripVolatile.js (top-level tests/, not inside any module).

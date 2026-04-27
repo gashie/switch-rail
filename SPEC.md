@@ -172,3 +172,7 @@ Total estimated effort: ~80 blocks across 10 phases. Phase 1 takes ~2 weeks of c
 - **Travel rule** — FATF requirement that originator and beneficiary identifying info travel with cross-border payments.
 - **PAPSS** — Pan-African Payment and Settlement System.
 - **BIS Nexus** — global multilateral hub for instant cross-border payments.
+Deferred items — known gaps, not regressions
+These are known, intentional deferrals. They are not bugs. Each will be revived when a real participant or partner triggers the need.
+ItemModuleDeferred fromNotesISO 8583 BCD bitmap encodingadapters-iso8583Phase 2 (B2.5)ASCII-hex bitmap shipped. Codec is parameterized. Add when a participant ships BCD wire.ISO 8583 EBCDIC character setadapters-iso8583Phase 2 (B2.5)Mainframe banks may need this. Codec is parameterized.Real NIA verificationaliasesPhase 3 (B3.5)Software fake ships in Phase 3. Real NIA adapter slots into the same interface when partnership is signed.Real HSM (PKCS#11)crypto-keysPhase 1 (B1.9)Software-backed AES-GCM custody ships. PKCS#11 adapter is a future block. Same interface.Production CA for participant certificatesparticipantsPhase 3 (B3.1)Self-signed CA in Phase 3. Real CA integration is operator-grade work per country.Federated learning for fraudfraudPhase 6 (deferred to v2)Centralized model in Phase 6. Federated training is a separate phase after launch.
+When CC encounters a real-world need that requires one of these, it ESCALATES via BLOCKERS.md rather than building it on the fly.
