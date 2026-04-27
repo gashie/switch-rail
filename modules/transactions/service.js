@@ -196,7 +196,13 @@ export const createTransactionsService = ({ db, model }) => {
     // Internal helpers used by the orchestrator and downstream modules.
     _internal: {
       insertReversal: (client, args) => model.insertReversal(client, args),
-      setRailClass: (client, id, railClass) => model.setRailClass(client, id, railClass)
+      setRailClass: (client, id, railClass) => model.setRailClass(client, id, railClass),
+      countRecentByOriginatorAndE2E: (client, args) =>
+        model.countRecentByOriginatorAndE2E(client, args),
+      sumVolumeForOriginator: (client, args) => model.sumVolumeForOriginator(client, args),
+      transitionOnClient: (client, txOrId, toState, opts) =>
+        transitionOnClient(client, txOrId, toState, opts),
+      ingestOnClient: (client, env) => ingestOnClient(client, env)
     }
   };
 };

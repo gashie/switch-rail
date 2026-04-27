@@ -246,5 +246,46 @@ export const createTransactionsModel = () => ({
       `UPDATE transactions SET rail_class = $2, updated_at = now() WHERE id = $1`,
       [id, railClass]
     );
+  },
+
+  // Authorization-pipeline pre-fetch helpers. Counts and sums are computed
+  // server-side (NUMERIC, BIGINT) and converted to BigInt at the model edge
+  // so the orchestrator stays in BigInt-money territory throughout.
+  countRecentByOriginatorAndE2E: async (
+    client,
+    { participantCode, endToEndId, excludeId, days = 7 }
+  ) => {
+    const r = await client.query(
+      `SELECT id FROM transactions
+        WHERE originator_participant = $1
+          AND end_to_end_id = $2
+          AND id <> $3
+          AND created_at > now() - ($4 || ' days')::interval
+        LIMIT 50`,
+      [participantCode, endToEndId, excludeId || '00000000-0000-0000-0000-000000000000', String(days)]
+    );
+    return r.rows;
+  },
+
+  sumVolumeForOriginator: async (
+    client,
+    { participantCode, withinIntervalSeconds, includeStates }
+  ) => {
+    const states = includeStates || [
+      'AUTHORIZED',
+      'ROUTED',
+      'CREDIT_LEG_PENDING',
+      'CONFIRMED',
+      'PENDING_RECONCILIATION'
+    ];
+    const r = await client.query(
+      `SELECT COALESCE(SUM(amount_value), 0)::text AS total
+         FROM transactions
+        WHERE originator_participant = $1
+          AND created_at >= now() - ($2 || ' seconds')::interval
+          AND state = ANY($3::text[])`,
+      [participantCode, String(withinIntervalSeconds), states]
+    );
+    return BigInt(r.rows[0].total);
   }
 });

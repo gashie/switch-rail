@@ -1,9 +1,20 @@
 import { sendOk } from '../../core/http.js';
 
-export const createTransactionsController = ({ service }) => ({
+export const createTransactionsController = ({ service, orchestrator }) => ({
   ingest: async (req, res) => {
     const tx = await service.ingestFromEnvelope(req.body.envelope);
     sendOk(res, { transaction: tx });
+  },
+
+  process: async (req, res) => {
+    const result = await orchestrator.process(req.body.envelope);
+    sendOk(res, {
+      transaction: result.transaction,
+      deduped: !!result.deduped,
+      state: result.transaction.state,
+      reasonCode: result.transaction.reason_code,
+      transactionId: result.transaction.id
+    });
   },
 
   getById: async (req, res) => {

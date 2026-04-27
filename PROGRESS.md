@@ -57,7 +57,7 @@ Spec: written when Phase 1 ends.
 - [x] B4.4 — `modules/routing/` (BIN routing, hot reload)
 - [x] B4.5 — Multi-rail orchestration (GIP/MMI/ACH path selection)
 - [x] B4.6 — `modules/credit-leg/` (forward to beneficiary, timeout enforcement)
-- [ ] B4.7 — Atomic outcome (debit + credit commit-or-rollback in one transaction)
+- [x] B4.7 — Atomic outcome (debit + credit commit-or-rollback in one transaction)
 - [ ] B4.8 — Recovery state (timeout retry, escalation, eventual reversal)
 - [ ] B4.9 — Confirmation flow (cryptographic receipts to both sides)
 - [ ] B4.10 — `modules/reversals/` (linked unwinds, return reason codes)

@@ -1,6 +1,7 @@
 export {
   default as transactionsRoutes,
   service as transactionsService,
+  orchestrator as transactionsOrchestrator,
   model as transactionsModel
 } from './routes.js';
 export {
