@@ -6,6 +6,11 @@ export const createRestController = ({ service }) => ({
     sendOk(res, result, result.deduped ? 200 : 201);
   },
 
+  process: async (req, res) => {
+    const result = await service.process(req.body);
+    sendOk(res, result, result.deduped ? 200 : 201);
+  },
+
   outbound: async (req, res) => {
     const signed = await service.outbound(req.body);
     sendOk(res, { envelope: signed });

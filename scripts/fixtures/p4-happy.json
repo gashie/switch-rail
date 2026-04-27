@@ -1,0 +1,29 @@
+{
+  "envelopeId": "01900000-0000-7000-8000-000000000001",
+  "msgVersion": "1.0",
+  "msgType": "CRDT_TRF",
+  "sourceFormat": "REST",
+  "sourceMessageId": "p4-rest-happy-001",
+  "endToEndId": "p4-rest-happy-e2e-001",
+  "idempotencyKey": "p4-rest-happy-idem-001",
+  "createdAt": "2026-04-26T10:00:00.000Z",
+  "originator": {
+    "participantCode": "DEMO_BANK",
+    "accountId": "1000000001",
+    "accountType": "BANK_ACCOUNT",
+    "name": "Kofi Mensah",
+    "countryCode": "GH"
+  },
+  "beneficiary": {
+    "participantCode": "DEMO_BANK",
+    "accountId": "1000000002",
+    "accountType": "BANK_ACCOUNT",
+    "name": "Ama Owusu",
+    "countryCode": "GH"
+  },
+  "amount": { "value": "15000", "currency": "GHS" },
+  "reference": "Phase 4 demo — happy",
+  "remittance": "P2P transfer demo",
+  "purposeCode": "GDDS",
+  "settlementMethod": "CLRG"
+}

@@ -16,18 +16,18 @@ const baseInput = (overrides = {}) => ({
 });
 
 beforeAll(async () => {
-  await query(`DELETE FROM participants WHERE code LIKE 'BANK%' OR code LIKE 'WALLET%' OR code LIKE 'TEST%'`);
+  await query(`DELETE FROM participants WHERE code IN ('BANK01','BANK02','BANK03','WALLET01','TESTBNK')`);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'participant.%'`);
 });
 
 afterAll(async () => {
-  await query(`DELETE FROM participants WHERE code LIKE 'BANK%' OR code LIKE 'WALLET%' OR code LIKE 'TEST%'`);
+  await query(`DELETE FROM participants WHERE code IN ('BANK01','BANK02','BANK03','WALLET01','TESTBNK')`);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'participant.%'`);
   await closePool();
 });
 
 beforeEach(async () => {
-  await query(`DELETE FROM participants WHERE code LIKE 'BANK%' OR code LIKE 'WALLET%' OR code LIKE 'TEST%'`);
+  await query(`DELETE FROM participants WHERE code IN ('BANK01','BANK02','BANK03','WALLET01','TESTBNK')`);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'participant.%'`);
 });
 

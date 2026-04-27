@@ -35,6 +35,17 @@ const DEMO_PARTICIPANTS = Object.freeze([
     type: 'FINTECH',
     bic: 'DEMOGHACCCC',
     supportedFormats: ['REST']
+  },
+  // BANK_TEST hosts the deterministic force-account range 9999000001-9999000010
+  // documented in PHASE-4. Demo and integration scripts use it to drive the
+  // simulator into specific outcomes (success, AM04, AC04, timeout, etc.).
+  {
+    code: 'BANK_TEST',
+    name: 'Test Bank',
+    legalName: 'Test Bank Sandbox Ltd',
+    type: 'BANK',
+    bic: 'TESTGHACAAA',
+    supportedFormats: ['REST', 'ISO20022', 'ISO8583']
   }
 ]);
 
@@ -46,7 +57,21 @@ const DEMO_ACCOUNTS = Object.freeze([
   { participantCode: 'DEMO_WALLET', accountNumber: '0244000001', accountName: 'Kofi Mensah' },
   { participantCode: 'DEMO_WALLET', accountNumber: '0244000002', accountName: 'Ama Owusu' },
   { participantCode: 'DEMO_FINTECH', accountNumber: '2000000001', accountName: 'Kwame Asante' },
-  { participantCode: 'DEMO_FINTECH', accountNumber: '2000000002', accountName: 'Demo Merchant Ltd' }
+  { participantCode: 'DEMO_FINTECH', accountNumber: '2000000002', accountName: 'Demo Merchant Ltd' },
+  // Force-account range under BANK_TEST. The simulator's hardcoded rules
+  // table (modules/participant-simulator/rules.js) drives the actual
+  // behaviour by account number; the directory rows just make these accounts
+  // resolvable so the orchestrator's account-status check can pass.
+  { participantCode: 'BANK_TEST', accountNumber: '9999000001', accountName: 'Force Success' },
+  { participantCode: 'BANK_TEST', accountNumber: '9999000002', accountName: 'Force AM04' },
+  { participantCode: 'BANK_TEST', accountNumber: '9999000003', accountName: 'Force AC04' },
+  { participantCode: 'BANK_TEST', accountNumber: '9999000004', accountName: 'Force AC06' },
+  { participantCode: 'BANK_TEST', accountNumber: '9999000005', accountName: 'Force AG01' },
+  { participantCode: 'BANK_TEST', accountNumber: '9999000006', accountName: 'Force RR04' },
+  { participantCode: 'BANK_TEST', accountNumber: '9999000007', accountName: 'Force Timeout' },
+  { participantCode: 'BANK_TEST', accountNumber: '9999000008', accountName: 'Force Slow' },
+  { participantCode: 'BANK_TEST', accountNumber: '9999000009', accountName: 'Force Intermittent' },
+  { participantCode: 'BANK_TEST', accountNumber: '9999000010', accountName: 'Force Unreachable' }
 ]);
 
 const KYB_DOCS = ['INCORPORATION', 'BOG_LICENSE', 'TAX_CERT', 'BENEFICIAL_OWNERS', 'AML_POLICY'];
@@ -67,9 +92,29 @@ const seedAdmin = async () => {
   }
 };
 
+const setSimulatorEndpoints = async (code) => {
+  // The demo-mode monolith mounts the participant simulator at /simulator.
+  // Each onboarded participant gets its credit-leg/status-check/reversal
+  // endpoints pointed at this in-process simulator so dev/test runs need
+  // no real bank stack to drive a payment end-to-end.
+  const base = `http://localhost:${config.port}`;
+  await query(
+    `UPDATE participants SET endpoints = $2::jsonb, updated_at = now() WHERE code = $1`,
+    [
+      code,
+      JSON.stringify({
+        credit_leg: `${base}/simulator/${code}/credit-leg`,
+        status_check: `${base}/simulator/${code}/status-check`,
+        reversal: `${base}/simulator/${code}/reversal`
+      })
+    ]
+  );
+};
+
 const onboardDemoParticipant = async (def) => {
   const created = await participantsService.create(def);
   if (created.deduped) {
+    await setSimulatorEndpoints(def.code);
     return { code: def.code, status: created.participant.status, created: false };
   }
   // Walk the full state machine: pending → kyb → certifying → active.
@@ -102,7 +147,13 @@ const onboardDemoParticipant = async (def) => {
     to: 'active',
     actorId: null
   });
+  await setSimulatorEndpoints(def.code);
   return { code: def.code, status: 'active', created: true };
+};
+
+const accountTypeFor = (participantCode) => {
+  if (participantCode === 'DEMO_WALLET') return 'WALLET';
+  return 'BANK_ACCOUNT';
 };
 
 const seedDemoAccounts = async () => {
@@ -110,8 +161,7 @@ const seedDemoAccounts = async () => {
   for (const a of DEMO_ACCOUNTS) {
     const r = await directoryService.register({
       participantCode: a.participantCode,
-      accountType:
-        a.participantCode === 'DEMO_WALLET' ? 'WALLET' : 'BANK_ACCOUNT',
+      accountType: accountTypeFor(a.participantCode),
       accountNumber: a.accountNumber,
       accountName: a.accountName,
       currency: 'GHS'
