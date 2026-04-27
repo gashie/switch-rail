@@ -13,14 +13,17 @@ export const ACCOUNT_TYPES = Object.freeze({
 });
 
 export const JOURNAL_REASONS = Object.freeze({
-  TRANSACTION_CONFIRMED: 'TRANSACTION_CONFIRMED',
-  REVERSAL:              'REVERSAL',
-  FEE_SETTLE:            'FEE_SETTLE',
-  INTRADAY_CYCLE:        'INTRADAY_CYCLE',
-  EOD_CYCLE:             'EOD_CYCLE',
-  RTGS_GROSS:            'RTGS_GROSS',
-  EXCEPTION:             'EXCEPTION',
-  TOPUP:                 'TOPUP'
+  TRANSACTION_CONFIRMED:    'TRANSACTION_CONFIRMED',
+  REVERSAL:                 'REVERSAL',
+  FEE_SETTLE:               'FEE_SETTLE',
+  INTRADAY_CYCLE:           'INTRADAY_CYCLE',
+  EOD_CYCLE:                'EOD_CYCLE',
+  RTGS_GROSS:               'RTGS_GROSS',
+  EXCEPTION:                'EXCEPTION',
+  TOPUP:                    'TOPUP',
+  // Phase 7 — disputes & adjudication.
+  DISPUTE_RESERVE_HOLD:     'DISPUTE_RESERVE_HOLD',
+  DISPUTE_RESERVE_RELEASE:  'DISPUTE_RESERVE_RELEASE'
 });
 
 export const SIDES = Object.freeze({ DR: 'DR', CR: 'CR' });

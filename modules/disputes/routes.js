@@ -10,9 +10,18 @@ import {
 import { createDisputesModel } from './model.js';
 import { createDisputesService } from './service.js';
 import { createDisputesController } from './controller.js';
+import { createAutoValidator } from './auto-validator.js';
+import { createReserveHolder } from './reserve-holder.js';
 
 const model = createDisputesModel();
-const service = createDisputesService({ db, model });
+const autoValidator = createAutoValidator({ model });
+const reserveHolder = createReserveHolder({ model });
+const service = createDisputesService({
+  db,
+  model,
+  autoValidator,
+  reserveHolder
+});
 const controller = createDisputesController({ service });
 
 const router = Router();
@@ -22,6 +31,7 @@ router.get('/', requireAuth, validateQuery(listQuerySchema), asyncHandler(contro
 router.get('/transaction/:txId', requireAuth, asyncHandler(controller.listForTransaction));
 router.get('/:caseNumber', requireAuth, asyncHandler(controller.getByCaseNumber));
 router.get('/:caseNumber/history', requireAuth, asyncHandler(controller.history));
+router.post('/:caseNumber/process', requireAuth, asyncHandler(controller.process));
 router.post('/:id/kill', requireAuth, validateBody(killBodySchema), asyncHandler(controller.kill));
 
 export { router as default, service, model };

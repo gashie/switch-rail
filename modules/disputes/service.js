@@ -9,6 +9,14 @@ import {
   FILING_RATE_LIMIT
 } from './codes.js';
 import { STATES, isTerminal, canTransition } from './states.js';
+import { evidencePendingUntil } from './sla-clock.js';
+import { hasRunnerFor, runnerFor } from './auto-resolver.js';
+
+const operatingDateFor = (tx) => {
+  const ts = tx.confirmed_at || tx.authorized_at || tx.created_at || new Date();
+  const d = ts instanceof Date ? ts : new Date(ts);
+  return d.toISOString().slice(0, 10);
+};
 
 // Counter durability — separate connection so the rate-limit increment
 // commits even if the surrounding case-creation transaction rolls back.
@@ -28,7 +36,7 @@ const ageInDays = (timestamp) => {
   return Math.floor((Date.now() - t) / 86_400_000);
 };
 
-export const createDisputesService = ({ db: dbm, model }) => {
+export const createDisputesService = ({ db: dbm, model, autoValidator, reserveHolder, autoResolverDeps }) => {
   // Internal: writes status-history row and updates case state in same client.
   // Exposed for B7.2+ that need to drive the state machine from inside other
   // transactions (auto-validator, settlement-service, etc.).
@@ -291,8 +299,187 @@ export const createDisputesService = ({ db: dbm, model }) => {
     });
   };
 
+  // Drives a FILED case through validation -> ACCEPTED (with reserve hold) ->
+  // either AUTO_RESOLVED (if a runner returns resolvable) or EVIDENCE_PENDING.
+  // Idempotent: re-running on a non-FILED case is a no-op.
+  const processFiled = async (caseId, { processedByUser } = {}) => {
+    return dbm.withTransaction(async (client) => {
+      const c = await model.findById(client, caseId);
+      if (!c) throw new AppError('NOT_FOUND', `dispute ${caseId} not found`, 404);
+      if (c.state !== STATES.FILED) {
+        return { case: c, advanced: false };
+      }
+      if (!autoValidator || !reserveHolder) {
+        throw new AppError(
+          'CONFLICT',
+          'service constructed without autoValidator or reserveHolder',
+          500
+        );
+      }
+
+      const valid = await autoValidator.validate(client, c);
+      if (!valid.ok) {
+        const updated = await model.setState(client, {
+          id: caseId,
+          toState: STATES.REJECTED,
+          fields: {
+            resolved_at: new Date().toISOString(),
+            outcome_notes: `auto-validation: ${valid.reason}`
+          }
+        });
+        await model.insertHistory(client, {
+          id: uuidv7(),
+          caseId,
+          fromState: STATES.FILED,
+          toState: STATES.REJECTED,
+          reason: valid.code,
+          payload: { reason: valid.reason },
+          occurredBy: processedByUser ? `user:${processedByUser}` : 'system'
+        });
+        await auditService.record(client, {
+          actorType: 'system',
+          eventType: 'dispute.rejected_filing',
+          resourceType: 'dispute_case',
+          resourceId: caseId,
+          payload: { code: valid.code, reason: valid.reason }
+        });
+        return { case: updated, advanced: true, rejected: true };
+      }
+
+      const transaction = valid.transaction;
+      const operatingDate = operatingDateFor(transaction);
+
+      // Transition FILED -> ACCEPTED first so reserveHolder's signature
+      // check (state === ACCEPTED) is satisfied. Same withTransaction.
+      const accepted = await model.setState(client, {
+        id: caseId,
+        toState: STATES.ACCEPTED,
+        fields: { accepted_at: new Date().toISOString() }
+      });
+      await model.insertHistory(client, {
+        id: uuidv7(),
+        caseId,
+        fromState: STATES.FILED,
+        toState: STATES.ACCEPTED,
+        reason: 'AUTO_VALIDATED',
+        payload: {},
+        occurredBy: processedByUser ? `user:${processedByUser}` : 'system'
+      });
+
+      // Hold the reserve.
+      const beneficiaryParticipant =
+        transaction.beneficiary_participant ||
+        accepted.metadata?.beneficiaryParticipant;
+      const hold = await reserveHolder.holdAmount(client, {
+        caseId,
+        amountMinor: accepted.amount_minor,
+        currency: accepted.currency,
+        beneficiaryParticipant,
+        operatingDate
+      });
+      const withReserve = await model.setState(client, {
+        id: caseId,
+        toState: STATES.ACCEPTED,
+        fields: { reserve_journal_id: hold.journalId }
+      });
+      await auditService.record(client, {
+        actorType: 'system',
+        eventType: 'dispute.accepted',
+        resourceType: 'dispute_case',
+        resourceId: caseId,
+        payload: {
+          reserveJournalId: hold.journalId,
+          beneficiaryParticipant,
+          amountMinor: String(accepted.amount_minor)
+        }
+      });
+
+      // Auto-resolve check. The runner registry is empty in B7.2 — every case
+      // falls through to EVIDENCE_PENDING. B7.4 wires real runners.
+      const slaWindow = SLA_WINDOWS[withReserve.reason_code];
+      const runnerKey = slaWindow.autoResolvable;
+      if (runnerKey && hasRunnerFor(runnerKey)) {
+        const runner = runnerFor(runnerKey);
+        const resolved = await runner({
+          caseRow: withReserve,
+          transaction,
+          client,
+          deps: autoResolverDeps || {}
+        });
+        if (resolved.resolvable) {
+          // Transition ACCEPTED -> AUTO_RESOLVED. The settlement-service
+          // (B7.5) is responsible for the SETTLED transition + release
+          // journal — the auto-resolver just records the outcome.
+          const autoResolved = await model.setState(client, {
+            id: caseId,
+            toState: STATES.AUTO_RESOLVED,
+            fields: {
+              resolved_at: new Date().toISOString(),
+              outcome: resolved.outcome,
+              outcome_amount_minor: resolved.outcomeAmountMinor || null,
+              outcome_notes: `auto-resolved by ${runnerKey}: ${resolved.rationaleCode}`
+            }
+          });
+          await model.insertHistory(client, {
+            id: uuidv7(),
+            caseId,
+            fromState: STATES.ACCEPTED,
+            toState: STATES.AUTO_RESOLVED,
+            reason: resolved.rationaleCode,
+            payload: { outcome: resolved.outcome, runnerKey },
+            occurredBy: 'system'
+          });
+          await auditService.record(client, {
+            actorType: 'system',
+            eventType: 'dispute.auto_resolved',
+            resourceType: 'dispute_case',
+            resourceId: caseId,
+            payload: {
+              runnerKey,
+              outcome: resolved.outcome,
+              rationaleCode: resolved.rationaleCode
+            }
+          });
+          return { case: autoResolved, advanced: true, autoResolved: true, resolution: resolved };
+        }
+      }
+
+      // No auto-resolution → EVIDENCE_PENDING with response window deadline.
+      const deadline = evidencePendingUntil(withReserve.reason_code);
+      const pending = await model.setState(client, {
+        id: caseId,
+        toState: STATES.EVIDENCE_PENDING,
+        fields: { evidence_pending_until: deadline.toISOString() }
+      });
+      await model.insertHistory(client, {
+        id: uuidv7(),
+        caseId,
+        fromState: STATES.ACCEPTED,
+        toState: STATES.EVIDENCE_PENDING,
+        reason: 'AWAITING_EVIDENCE',
+        payload: { deadlineIso: deadline.toISOString() },
+        occurredBy: 'system'
+      });
+      await auditService.record(client, {
+        actorType: 'system',
+        eventType: 'dispute.evidence_requested',
+        resourceType: 'dispute_case',
+        resourceId: caseId,
+        payload: {
+          beneficiaryParticipant,
+          deadlineIso: deadline.toISOString(),
+          // webhook delivery deferred to Phase 10; audit serves as the signal.
+          delivery: 'audit-only'
+        }
+      });
+
+      return { case: pending, advanced: true, autoResolved: false };
+    });
+  };
+
   return {
     file,
+    processFiled,
     findById,
     findByCaseNumber,
     list,

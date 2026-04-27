@@ -39,6 +39,17 @@ export const createDisputesController = ({ service }) => ({
     sendOk(res, { items });
   },
 
+  process: async (req, res) => {
+    const operatorId = req.ctx?.user?.id || null;
+    const c = await service.findByCaseNumber(req.params.caseNumber);
+    if (!c) {
+      sendOk(res, { found: false }, 404);
+      return;
+    }
+    const result = await service.processFiled(c.id, { processedByUser: operatorId });
+    sendOk(res, result);
+  },
+
   kill: async (req, res) => {
     const operatorId = req.ctx?.user?.id || null;
     const result = await service.operatorKill({

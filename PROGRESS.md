@@ -95,7 +95,7 @@ Spec: written when Phase 1 ends.
 ## Phase 7 — Disputes (autonomous)
 
 - [x] B7.1 — `modules/disputes/` (case state machine, structured reason codes)
-- [ ] B7.2 — Per-reason SLA enforcement with auto-uphold on timeout
+- [x] B7.2 — Per-reason SLA enforcement with auto-uphold on timeout
 - [ ] B7.3 — Evidence upload with cryptographic timestamping
 - [ ] B7.4 — Adjudication engine (auto for clear-cut, route to human for ambiguous)
 - [ ] B7.5 — Auto-debit on outcome (settlement integration)
