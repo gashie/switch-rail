@@ -88,7 +88,7 @@ Spec: written when Phase 1 ends.
 - [x] B6.5 — `modules/network-graph/` (mule ring detection, structuring, coordinated attacks)
 - [x] B6.6 — Cross-participant fraud signal exchange
 - [x] B6.7 — `modules/fast-track-reversal/` (PIX-MED equivalent — defined-window fraud clawback)
-- [ ] B6.8 — Phase 6 exit gate: fraud demo script catches simulated mule ring
+- [x] B6.8 — Phase 6 exit gate: fraud demo script catches simulated mule ring
 
 ---
 
@@ -140,7 +140,7 @@ Spec: written when Phase 1 ends.
 
 ## Status
 
-- **Current phase:** 5 — Settlement, liquidity & EOD (DONE)
-- **Current block:** B6.1 (Phase 6 master prompt awaited)
-- **Tests passing:** 532
-- **Migrations applied:** 25
+- **Current phase:** 6 — Fraud & risk in line (DONE)
+- **Current block:** B7.1 (Phase 7 master prompt awaited)
+- **Tests passing:** 612
+- **Migrations applied:** 32
