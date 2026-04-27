@@ -17,6 +17,7 @@ let simulatorBaseUrl;
 let simulatorServer;
 
 const cleanup = async () => {
+  await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'cl-%'`);
@@ -120,6 +121,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+  await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'cl-%'`);

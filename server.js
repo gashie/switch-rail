@@ -21,6 +21,7 @@ import { transactionsRoutes } from './modules/transactions/index.js';
 import { routingRoutes } from './modules/routing/index.js';
 import { participantSimulatorRoutes } from './modules/participant-simulator/index.js';
 import { creditLegRoutes } from './modules/credit-leg/index.js';
+import { transactionReceiptsRoutes } from './modules/transaction-receipts/index.js';
 import { transactionRecoveryWorker } from './modules/transaction-recovery/index.js';
 
 const app = express();
@@ -55,6 +56,7 @@ app.use('/transactions', transactionsRoutes);
 app.use('/routing', routingRoutes);
 app.use('/simulator', participantSimulatorRoutes);
 app.use('/credit-leg', creditLegRoutes);
+app.use('/transaction-receipts', transactionReceiptsRoutes);
 app.use(errorHandler);
 
 const server = app.listen(config.port, () => {

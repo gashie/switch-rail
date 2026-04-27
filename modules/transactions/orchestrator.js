@@ -6,6 +6,7 @@ import { envelopeService } from '../envelope/index.js';
 import { createAuthorizationService } from '../authorization/index.js';
 import { railOrchestrationService } from '../rail-orchestration/index.js';
 import { creditLegService } from '../credit-leg/index.js';
+import { transactionReceiptsService } from '../transaction-receipts/index.js';
 import { CATEGORY } from '../../core/codes.js';
 import {
   DEFAULT_DAILY_CAP_MINOR,
@@ -205,7 +206,10 @@ export const createOrchestrator = ({ db, transactionsService }) => {
             occurredBy: 'system',
             payload: { creditedAt: cl.raw?.data?.creditedAt }
           });
-          return { transaction: tx, deduped: false, creditLeg: cl };
+          // Receipts issued in the SAME transaction so there's no observable
+          // window where a CONFIRMED txn lacks proof.
+          const receipts = await transactionReceiptsService.issueReceipts(client, tx);
+          return { transaction: tx, deduped: false, creditLeg: cl, receipts };
         }
         if (cl.category === CATEGORY.TERMINAL_FAIL) {
           tx = await finalizeWithError(client, tx, cl.reasonCode, cl.raw?.error?.message || cl.reasonCode);

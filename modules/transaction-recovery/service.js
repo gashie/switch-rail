@@ -5,6 +5,7 @@ import { config } from '../../core/config.js';
 import { cryptoKeysService } from '../crypto-keys/index.js';
 import { participantsService } from '../participants/index.js';
 import { transactionsService } from '../transactions/index.js';
+import { transactionReceiptsService } from '../transaction-receipts/index.js';
 import { auditService } from '../audit/index.js';
 import { withTimeout } from '../credit-leg/index.js';
 import { byName as railClassByName } from '../rail-orchestration/index.js';
@@ -245,7 +246,9 @@ export const createTransactionRecoveryService = ({
             payload: { recovery: true, attempts: attemptsAfter, creditedAt: probe.creditedAt }
           }
         );
-        return { id, terminal: 'CONFIRMED', attempts: attemptsAfter, transaction: tx, probe };
+        // Issue receipts atomically with the recovery-driven CONFIRMED.
+        const receipts = await transactionReceiptsService.issueReceipts(client, tx);
+        return { id, terminal: 'CONFIRMED', attempts: attemptsAfter, transaction: tx, probe, receipts };
       }
       if (probe.outcome === PROBE_OUTCOMES.NOT_CREDITED) {
         const tx = await transactionsService._internal.transitionOnClient(
