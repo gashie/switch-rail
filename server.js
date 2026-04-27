@@ -12,6 +12,11 @@ import { iso20022Routes } from './modules/adapters-iso20022/index.js';
 import { iso8583Routes } from './modules/adapters-iso8583/index.js';
 import { swiftRoutes } from './modules/adapters-swift/index.js';
 import { bulkRoutes } from './modules/adapters-bulk/index.js';
+import { participantsRoutes } from './modules/participants/index.js';
+import { participantOnboardingRoutes } from './modules/participant-onboarding/index.js';
+import { directoryRoutes } from './modules/directory/index.js';
+import { aliasesRoutes } from './modules/aliases/index.js';
+import { nameEnquiryRoutes } from './modules/name-enquiry/index.js';
 
 const app = express();
 app.use(express.json({ limit: '5mb' }));
@@ -36,6 +41,11 @@ app.use('/adapters-iso20022', iso20022Routes);
 app.use('/adapters-iso8583', iso8583Routes);
 app.use('/adapters-swift', swiftRoutes);
 app.use('/adapters-bulk', bulkRoutes);
+app.use('/participants', participantsRoutes);
+app.use('/participant-onboarding', participantOnboardingRoutes);
+app.use('/directory', directoryRoutes);
+app.use('/aliases', aliasesRoutes);
+app.use('/name-enquiry', nameEnquiryRoutes);
 app.use(errorHandler);
 
 app.listen(config.port, () =>

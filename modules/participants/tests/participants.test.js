@@ -84,9 +84,13 @@ describe('participants — getByCode / list', () => {
     await participantsService.create(
       baseInput({ code: 'WALLET01', name: 'Wallet One', legalName: 'Wallet One Ltd', type: 'WALLET', bic: undefined })
     );
+    // Tolerant of pre-existing demo seed data (DEMO_BANK from scripts/seed.js):
+    // assert BANK01 is in the list, every returned row has type=BANK, and the
+    // WALLET row is excluded.
     const banks = await participantsService.list({ type: 'BANK', limit: 50, offset: 0 });
-    expect(banks.total).toBe(1);
-    expect(banks.rows[0].code).toBe('BANK01');
+    expect(banks.rows.find((r) => r.code === 'BANK01')).toBeDefined();
+    expect(banks.rows.every((r) => r.type === 'BANK')).toBe(true);
+    expect(banks.rows.find((r) => r.code === 'WALLET01')).toBeUndefined();
   });
 });
 
