@@ -26,6 +26,7 @@ import { reversalsRoutes } from './modules/reversals/index.js';
 import { ledgerRoutes } from './modules/ledger/index.js';
 import { settlementRoutes } from './modules/settlement/index.js';
 import { liquidityRoutes } from './modules/liquidity/index.js';
+import { settlementCycleRoutes } from './modules/settlement-cycle/index.js';
 
 export const buildApp = () => {
   const app = express();
@@ -65,6 +66,7 @@ export const buildApp = () => {
   app.use('/ledger', ledgerRoutes);
   app.use('/settlement', settlementRoutes);
   app.use('/liquidity', liquidityRoutes);
+  app.use('/settlement-cycle', settlementCycleRoutes);
   app.use(errorHandler);
 
   return app;
