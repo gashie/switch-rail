@@ -43,8 +43,8 @@ Spec: written when Phase 1 ends.
 - [x] B3.3 — `modules/directory/` (accounts table — bank_id+account_number, wallet operator+msisdn)
 - [x] B3.4 — `modules/aliases/` (one alias → one account; many aliases per account)
 - [x] B3.5 — Alias verification flows (phone OTP, email link, Ghanacard NIA hook, merchant TIN)
-- [ ] B3.6 — Alias portability across PSPs
-- [ ] B3.7 — `modules/name-enquiry/` (resolve input → account; mask beneficiary name)
+- [x] B3.6 — Alias portability across PSPs
+- [x] B3.7 — `modules/name-enquiry/` (resolve input → account; mask beneficiary name)
 - [ ] B3.8 — Confirmation of Payee (fuzzy match scoring, match/close/no-match return) + Phase 3 exit gate
 
 ---

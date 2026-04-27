@@ -98,6 +98,14 @@ export const createParticipantsModel = () => ({
     return r.rows[0] || null;
   },
 
+  findCodeByBic: async (client, bic) => {
+    const r = await client.query(
+      `SELECT code FROM participants WHERE bic = $1 LIMIT 1`,
+      [String(bic).toUpperCase()]
+    );
+    return r.rows[0]?.code || null;
+  },
+
   updateByCode: async (client, code, data) => {
     const keys = Object.keys(data);
     if (keys.length === 0) {

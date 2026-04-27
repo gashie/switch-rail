@@ -110,6 +110,11 @@ export const createParticipantsService = ({ db, model }) => ({
       return row;
     }),
 
+  // BIC → participantCode lookup, used by name-enquiry to resolve incoming
+  // requests that carry only a BIC + account number. Returns null if no
+  // participant with that BIC is registered.
+  findByBic: (bic) => db.withClient((client) => model.findCodeByBic(client, bic)),
+
   listKeysFor: (code) =>
     db.withClient(async (client) => {
       const row = await model.findByCode(client, code);
