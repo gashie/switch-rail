@@ -8,6 +8,12 @@ import { railOrchestrationService } from '../rail-orchestration/index.js';
 import { creditLegService } from '../credit-leg/index.js';
 import { transactionReceiptsService } from '../transaction-receipts/index.js';
 import { ledgerService, ACCOUNT_TYPES, JOURNAL_REASONS, accountCodeFor } from '../ledger/index.js';
+// Importing settlement here is intentional — it registers the
+// applyJournalToPositions hook on the ledger as a side effect of module
+// load. The orchestrator is the load-bearing path for ledger writes, so
+// this ensures the materialized position view is always in sync, including
+// in tests that don't boot the monolith app.
+import '../settlement/index.js';
 import { CATEGORY } from '../../core/codes.js';
 import {
   DEFAULT_DAILY_CAP_MINOR,

@@ -21,6 +21,7 @@ const cleanup = async () => {
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'rc-%'`);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'transaction.%' OR event_type LIKE 'envelope.%' OR event_type LIKE 'participant.%'`);
+  await query(`DELETE FROM settlement_positions WHERE participant_code IN ($1,$2,$3,$4)`, [A, B, W, F]);
   await query(`DELETE FROM participants WHERE code IN ($1,$2,$3,$4)`, [A, B, W, F]);
 };
 

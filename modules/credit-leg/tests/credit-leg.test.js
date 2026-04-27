@@ -24,6 +24,7 @@ const cleanup = async () => {
   await query(`DELETE FROM participant_kyb WHERE participant_id IN (SELECT id FROM participants WHERE code IN ($1,$2))`, [ORIG, BENE]);
   await query(`DELETE FROM participant_certifications WHERE participant_id IN (SELECT id FROM participants WHERE code IN ($1,$2))`, [ORIG, BENE]);
   await query(`DELETE FROM signing_keys WHERE owner_type IN ('participant') AND owner_id IN ($1,$2)`, [ORIG, BENE]);
+  await query(`DELETE FROM settlement_positions WHERE participant_code IN ($1,$2)`, [ORIG, BENE]);
   await query(`DELETE FROM participants WHERE code IN ($1,$2)`, [ORIG, BENE]);
 };
 

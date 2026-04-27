@@ -69,7 +69,7 @@ Spec: written when Phase 1 ends.
 ## Phase 5 — Settlement, liquidity & EOD (autonomous)
 
 - [x] B5.1 — `modules/ledger/` (double-entry, hash-chained, BigInt, multi-currency)
-- [ ] B5.2 — `modules/settlement/` (real-time positions per participant)
+- [x] B5.2 — `modules/settlement/` (real-time positions per participant)
 - [ ] B5.3 — `modules/liquidity/` (floors, ceilings, throttle/block on floor breach, prefunding top-up)
 - [ ] B5.4 — Settlement cycles (intraday net cycles, RTGS-linked high-value, programmable windows)
 - [ ] B5.5 — `modules/eod/` (cutover, settlement report generation, snapshot, hash freeze, day rollover)

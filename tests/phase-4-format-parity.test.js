@@ -40,6 +40,7 @@ const cleanup = async () => {
   await query(`DELETE FROM participant_certifications WHERE participant_id IN (SELECT id FROM participants WHERE code = ANY($1))`, [codes]);
   await query(`DELETE FROM signing_keys WHERE owner_type='participant' AND owner_id = ANY($1)`, [codes]);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'transaction.%' OR event_type LIKE 'envelope.%'`);
+  await query(`DELETE FROM settlement_positions WHERE participant_code = ANY($1)`, [codes]);
   await query(`DELETE FROM participants WHERE code = ANY($1)`, [codes]);
   await query(`DELETE FROM users WHERE email = $1`, [ADMIN_EMAIL]);
 };

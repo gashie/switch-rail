@@ -12,6 +12,7 @@ const cleanup = async () => {
   await query(`DELETE FROM envelopes WHERE originator_participant = $1 OR beneficiary_participant = $1`, [CODE]);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'participant.%' AND payload->>'code' = $1`, [CODE]);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'envelope.%' AND payload->>'originatorParticipant' = $1`, [CODE]);
+  await query(`DELETE FROM settlement_positions WHERE participant_code = $1`, [CODE]);
   await query(`DELETE FROM participants WHERE code = $1`, [CODE]);
 };
 
