@@ -3,6 +3,7 @@ import { asyncHandler, validateBody } from '../../core/http.js';
 import * as db from '../../core/db.js';
 import { directoryService } from '../directory/index.js';
 import { networkGraphAlertsModel } from '../network-graph/index.js';
+import { fraudFlagsModel } from '../fraud-flags/index.js';
 import { requireAuth } from '../auth/index.js';
 import { proposeChangeBodySchema } from './schema.js';
 import { createRulesModel } from './rules-model.js';
@@ -26,7 +27,8 @@ const ruleContextBuilder = createRuleContextBuilder({
   db,
   directoryService,
   baselineModel,
-  alertsModel: networkGraphAlertsModel
+  alertsModel: networkGraphAlertsModel,
+  flagsModel: fraudFlagsModel
 });
 const controller = createFraudController({ rulesService, signalsService });
 

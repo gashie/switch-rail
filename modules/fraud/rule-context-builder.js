@@ -86,7 +86,8 @@ export const createRuleContextBuilder = ({
   db,
   directoryService,
   baselineModel,
-  alertsModel
+  alertsModel,
+  flagsModel
 }) => {
   const buildContext = async ({ transaction, envelope, client, signals: signalOverride }) => {
     const runOn = async (c) => {
@@ -134,6 +135,28 @@ export const createRuleContextBuilder = ({
           .catch(() => false);
       }
 
+      // Cross-participant peer-flag signal (B6.6): any active flag for
+      // the beneficiary account or originator account from any participant?
+      let prevFlaggedByPeer = false;
+      let peerFlagSeverity = 0;
+      if (flagsModel) {
+        const beneKey = `${transaction.beneficiary_participant}:${transaction.beneficiary_account}`;
+        const origKey = `${transaction.originator_participant}:${transaction.originator_account}`;
+        const beneFlags = await flagsModel.maxActiveSeverity(c, {
+          subjectType: 'ACCOUNT',
+          subjectKey: beneKey
+        }).catch(() => ({ maxSeverity: 0, count: 0 }));
+        const origFlags = await flagsModel.maxActiveSeverity(c, {
+          subjectType: 'ACCOUNT',
+          subjectKey: origKey
+        }).catch(() => ({ maxSeverity: 0, count: 0 }));
+        const sev = Math.max(beneFlags.maxSeverity, origFlags.maxSeverity);
+        if (sev > 0) {
+          prevFlaggedByPeer = true;
+          peerFlagSeverity = sev;
+        }
+      }
+
       return {
         transaction,
         envelope: envelope || null,
@@ -155,8 +178,8 @@ export const createRuleContextBuilder = ({
           sanctionsHit: false,
           watchlistHit: false,
           networkGraphFlag,
-          prevFlaggedByPeer: false,
-          peerFlagSeverity: 0,
+          prevFlaggedByPeer,
+          peerFlagSeverity,
           ...signalOverride
         },
         device: {}

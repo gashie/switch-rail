@@ -86,7 +86,7 @@ Spec: written when Phase 1 ends.
 - [x] B6.3 — ML scoring hook (model interface, feature extractor; model itself is plugin)
 - [x] B6.4 — `modules/sanctions/` (OFAC, UN, EU, BoG, FIC lists; PEP screening)
 - [x] B6.5 — `modules/network-graph/` (mule ring detection, structuring, coordinated attacks)
-- [ ] B6.6 — Cross-participant fraud signal exchange
+- [x] B6.6 — Cross-participant fraud signal exchange
 - [ ] B6.7 — `modules/fast-track-reversal/` (PIX-MED equivalent — defined-window fraud clawback)
 - [ ] B6.8 — Phase 6 exit gate: fraud demo script catches simulated mule ring
 
