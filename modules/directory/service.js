@@ -83,6 +83,14 @@ export const createDirectoryService = ({ db, model }) => ({
       return row;
     }),
 
+  // Lookup by surrogate id; used cross-module (aliases, name-enquiry). Returns
+  // null if not found rather than throwing — callers decide whether missing
+  // is a hard error or a tolerated case.
+  findById: (id, client) => {
+    const run = (c) => model.findById(c, id);
+    return client && typeof client.query === 'function' ? run(client) : db.withClient(run);
+  },
+
   list: (input) => db.withClient((client) => model.list(client, input)),
 
   searchByName: ({ participantCode, q, limit = 10 }) =>

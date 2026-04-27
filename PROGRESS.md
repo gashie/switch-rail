@@ -41,7 +41,7 @@ Spec: written when Phase 1 ends.
 - [x] B3.1 — `modules/participants/` (registration, certs, endpoints, status)
 - [x] B3.2 — Participant onboarding workflow (KYB, certification, go-live gate)
 - [x] B3.3 — `modules/directory/` (accounts table — bank_id+account_number, wallet operator+msisdn)
-- [ ] B3.4 — `modules/aliases/` (one alias → one account; many aliases per account)
+- [x] B3.4 — `modules/aliases/` (one alias → one account; many aliases per account)
 - [ ] B3.5 — Alias verification flows (phone OTP, email link, Ghanacard NIA hook, merchant TIN)
 - [ ] B3.6 — Alias portability across PSPs
 - [ ] B3.7 — `modules/name-enquiry/` (resolve input → account; mask beneficiary name)
