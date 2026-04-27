@@ -40,6 +40,19 @@ export const createSimulatorController = ({ service }) => ({
     sendOk(res, out.data);
   },
 
+  freeze: async (req, res) => {
+    const { participantCode } = req.params;
+    const result = await service.freeze({ participantCode, request: req.body });
+    if (result.kind === 'tcp_error') {
+      req.socket?.destroy();
+      return;
+    }
+    if (result.body?.ok === false) {
+      throw passthroughError(result.body);
+    }
+    sendOk(res, result.body?.data ?? {}, 200);
+  },
+
   upsertOverride: async (req, res) => {
     const row = await service.upsertOverride(req.body);
     sendOk(res, { override: row }, 201);

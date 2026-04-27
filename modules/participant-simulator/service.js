@@ -109,10 +109,35 @@ export const createSimulatorService = ({ db, model }) => {
     data: { reversedAt: new Date().toISOString() }
   });
 
+  // Freeze endpoint introduced in B6.7. Reuses the force-account behavior
+  // table — 9999000003 returns "account closed", 9999000007 times out, etc.
+  // The default is success with a frozenAt timestamp.
+  const handleFreeze = async ({ participantCode, request }) => {
+    const accountNumber = request.accountId;
+    const decision = await resolveBehavior({ participantCode, accountNumber });
+    switch (decision.behavior) {
+      case 'REJECT_AC04':
+        return { kind: 'http_failure', body: { ok: false, error: { code: 'AC04', message: 'Closed Account Number' } } };
+      case 'REJECT_AM04':
+        return { kind: 'http_failure', body: { ok: false, error: { code: 'AM04', message: 'Insufficient Funds' } } };
+      case 'TIMEOUT':
+        await sleep(delaysMs().timeoutHard);
+        return { kind: 'http_success', body: { ok: true, data: { frozenAt: new Date().toISOString(), note: 'late' } } };
+      case 'UNREACHABLE':
+        return { kind: 'tcp_error' };
+      default:
+        return {
+          kind: 'http_success',
+          body: { ok: true, data: { frozenAt: new Date().toISOString() } }
+        };
+    }
+  };
+
   return {
     creditLeg: handleCreditLeg,
     statusCheck: handleStatusCheck,
     reversal: handleReversal,
+    freeze: handleFreeze,
     upsertOverride: ({ participantCode, accountNumber, behavior, reasonCode, delayMs }) =>
       db.withTransaction((client) =>
         model.upsertOverride(client, {

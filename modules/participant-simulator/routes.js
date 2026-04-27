@@ -5,6 +5,7 @@ import {
   creditLegBodySchema,
   statusCheckBodySchema,
   reversalBodySchema,
+  freezeBodySchema,
   overrideBodySchema
 } from './schema.js';
 import { createSimulatorModel } from './model.js';
@@ -37,6 +38,11 @@ router.post(
   '/:participantCode/reversal',
   validateBody(reversalBodySchema),
   asyncHandler(controller.reversal)
+);
+router.post(
+  '/:participantCode/freeze',
+  validateBody(freezeBodySchema),
+  asyncHandler(controller.freeze)
 );
 router.post('/overrides', validateBody(overrideBodySchema), asyncHandler(controller.upsertOverride));
 router.get('/overrides', asyncHandler(controller.listOverrides));

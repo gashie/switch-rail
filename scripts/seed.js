@@ -127,7 +127,8 @@ const setSimulatorEndpoints = async (code) => {
       JSON.stringify({
         credit_leg: `${base}/simulator/${code}/credit-leg`,
         status_check: `${base}/simulator/${code}/status-check`,
-        reversal: `${base}/simulator/${code}/reversal`
+        reversal: `${base}/simulator/${code}/reversal`,
+        freeze: `${base}/simulator/${code}/freeze`
       })
     ]
   );

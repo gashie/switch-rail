@@ -42,6 +42,17 @@ export const reversalBodySchema = Joi.object({
   }).required()
 }).unknown(true);
 
+export const freezeBodySchema = Joi.object({
+  accountId: accountIdRule.required(),
+  holdAmountMinor: Joi.alternatives().try(
+    Joi.string().pattern(/^\d+$/),
+    Joi.number().integer().min(0)
+  ).optional(),
+  currency: Joi.string().length(3).uppercase().optional(),
+  reason: Joi.string().min(1).max(500).optional(),
+  originalTransactionId: txIdRule.optional()
+}).unknown(true);
+
 export const overrideBodySchema = Joi.object({
   participantCode: Joi.string().pattern(/^[A-Z0-9_]{3,32}$/).required(),
   accountNumber: accountIdRule.required(),
