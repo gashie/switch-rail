@@ -28,3 +28,19 @@ export const hasRunnerFor = (key) => RUNNERS.has(key);
 
 // Test/reset hook — used by unit tests to clear and re-seed the registry.
 export const _resetRunners = () => RUNNERS.clear();
+
+// Convenience for tests + production wire-up: register all four B7.4 runners
+// in one call. Tests that need real runners after _resetRunners() should
+// invoke this; routes.js does it on first import.
+export const registerDefaultRunners = async () => {
+  const [{ rFraud }, { rDuplicate }, { rTechnical }, { rWrongBeneficiary }] = await Promise.all([
+    import('./auto-resolver-rules/r-fraud.js'),
+    import('./auto-resolver-rules/r-duplicate.js'),
+    import('./auto-resolver-rules/r-technical.js'),
+    import('./auto-resolver-rules/r-wrong-beneficiary.js')
+  ]);
+  registerRunner('r-fraud', rFraud);
+  registerRunner('r-duplicate', rDuplicate);
+  registerRunner('r-technical', rTechnical);
+  registerRunner('r-wrong-beneficiary', rWrongBeneficiary);
+};

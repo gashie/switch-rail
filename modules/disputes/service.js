@@ -36,7 +36,7 @@ const ageInDays = (timestamp) => {
   return Math.floor((Date.now() - t) / 86_400_000);
 };
 
-export const createDisputesService = ({ db: dbm, model, autoValidator, reserveHolder, autoResolverDeps }) => {
+export const createDisputesService = ({ db: dbm, model, decisionModel, autoValidator, reserveHolder, autoResolverDeps }) => {
   // Internal: writes status-history row and updates case state in same client.
   // Exposed for B7.2+ that need to drive the state machine from inside other
   // transactions (auto-validator, settlement-service, etc.).
@@ -394,8 +394,8 @@ export const createDisputesService = ({ db: dbm, model, autoValidator, reserveHo
         }
       });
 
-      // Auto-resolve check. The runner registry is empty in B7.2 — every case
-      // falls through to EVIDENCE_PENDING. B7.4 wires real runners.
+      // Auto-resolve check. The runner registry is wired by routes.js with
+      // the four real B7.4 runners; tests can register synthetic runners.
       const slaWindow = SLA_WINDOWS[withReserve.reason_code];
       const runnerKey = slaWindow.autoResolvable;
       if (runnerKey && hasRunnerFor(runnerKey)) {
@@ -407,6 +407,22 @@ export const createDisputesService = ({ db: dbm, model, autoValidator, reserveHo
           deps: autoResolverDeps || {}
         });
         if (resolved.resolvable) {
+          // Persist a dispute_decisions row with decision_type='AUTO'. This
+          // mirrors the manual-decision path so settlement-service (B7.5)
+          // sees a uniform decision regardless of how it was reached.
+          if (decisionModel) {
+            await decisionModel.insert(client, {
+              id: uuidv7(),
+              caseId,
+              decisionType: 'AUTO',
+              outcome: resolved.outcome,
+              outcomeAmountMinor: resolved.outcomeAmountMinor || null,
+              rationaleCode: resolved.rationaleCode,
+              rationaleNotes: resolved.notes || null,
+              decidedByUser: null,
+              evidenceConsidered: { runnerKey, autoApplied: true }
+            });
+          }
           // Transition ACCEPTED -> AUTO_RESOLVED. The settlement-service
           // (B7.5) is responsible for the SETTLED transition + release
           // journal — the auto-resolver just records the outcome.

@@ -3,12 +3,17 @@ export {
   service as disputesService,
   model as disputesModel,
   evidenceService as disputesEvidenceService,
-  evidenceModel as disputesEvidenceModel
+  evidenceModel as disputesEvidenceModel,
+  decisionService as disputesDecisionService,
+  decisionModel as disputesDecisionModel
 } from './routes.js';
 export { createDisputesService } from './service.js';
 export { createDisputesModel } from './model.js';
 export { createEvidenceService } from './evidence-service.js';
 export { createEvidenceModel } from './evidence-model.js';
+export { createDecisionService } from './decision-service.js';
+export { createDecisionModel } from './decision-model.js';
+export { registerRunner, _resetRunners, registerDefaultRunners } from './auto-resolver.js';
 export {
   REASON_CODES,
   SLA_WINDOWS,
