@@ -33,7 +33,11 @@ export default [
         BigInt: 'readonly',
         __dirname: 'readonly',
         __filename: 'readonly',
-        fetch: 'readonly'
+        fetch: 'readonly',
+        AbortController: 'readonly',
+        Request: 'readonly',
+        Response: 'readonly',
+        Headers: 'readonly'
       }
     },
     rules: {
