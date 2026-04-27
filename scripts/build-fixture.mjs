@@ -1,10 +1,61 @@
 // Helper invoked by demo scripts to materialize wire-format fixtures from
-// the canonical JSON envelopes. Usage:
+// the canonical JSON envelopes. Two modes:
 //   node scripts/build-fixture.mjs pacs008  <inJson> <outFile> <nonce>
-//   node scripts/build-fixture.mjs iso8583 <inJson> <outFile> <nonce>
+//   node scripts/build-fixture.mjs iso8583  <inJson> <outFile> <nonce>
+//   node scripts/build-fixture.mjs envelope <prefix> <index>           # stdout
 import { readFileSync, writeFileSync } from 'node:fs';
 
-const [, , kind, inFile, outFile, nonce] = process.argv;
+const [, , kind, ...rest] = process.argv;
+
+if (kind === 'envelope') {
+  // Phase 5 demo path: emit a freshly-built REST envelope to stdout. Odd
+  // indices flow A→B, even indices flow B→A so the netting cycle has
+  // both-direction activity to net.
+  const [prefix, indexStr] = rest;
+  if (!prefix || !indexStr) {
+    console.error('usage: build-fixture.mjs envelope <prefix> <index>');
+    process.exit(1);
+  }
+  const idx = Number(indexStr);
+  const A = 'P5BANK01';
+  const B = 'P5BANK02';
+  const fromA = idx % 2 === 1;
+  const padIdx = String(idx).padStart(4, '0');
+  const tag = `${prefix}${padIdx}`.replace(/[^a-f0-9]/gi, '').toLowerCase();
+  const padded = (tag + 'a1b2c3d4e5f6').slice(0, 12);
+  const env = {
+    envelopeId: `01900000-0000-7000-8${padded.slice(0, 3)}-${padded}`,
+    msgVersion: '1.0',
+    msgType: 'CRDT_TRF',
+    sourceFormat: 'REST',
+    sourceMessageId: `${prefix}-msg-${idx}`,
+    endToEndId: `${prefix}-e2e-${idx}`,
+    idempotencyKey: `${prefix}-idem-${idx}-${Date.now()}`,
+    createdAt: new Date().toISOString(),
+    originator: {
+      participantCode: fromA ? A : B,
+      accountId: fromA ? '5100000001' : '5200000001',
+      accountType: 'BANK_ACCOUNT',
+      name: fromA ? 'P5 Sender' : 'P5 Receiver',
+      countryCode: 'GH'
+    },
+    beneficiary: {
+      participantCode: fromA ? B : A,
+      accountId: fromA ? '5200000001' : '5100000001',
+      accountType: 'BANK_ACCOUNT',
+      name: fromA ? 'P5 Receiver' : 'P5 Sender',
+      countryCode: 'GH'
+    },
+    amount: { value: String(15000 + idx * 100), currency: 'GHS' },
+    reference: `phase-5 demo ${idx}`,
+    purposeCode: 'GDDS',
+    settlementMethod: 'CLRG'
+  };
+  process.stdout.write(JSON.stringify(env));
+  process.exit(0);
+}
+
+const [inFile, outFile, nonce] = rest;
 if (!kind || !inFile || !outFile || !nonce) {
   console.error('usage: build-fixture.mjs <pacs008|iso8583> <inJson> <outFile> <nonce>');
   process.exit(1);

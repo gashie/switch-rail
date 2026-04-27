@@ -116,6 +116,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+  await query(`DELETE FROM fee_schedules`);
   await query(`DELETE FROM settlement_cycle_movements`);
   await query(`DELETE FROM settlement_cycles`);
   await query(`DELETE FROM ledger_postings`);

@@ -6,6 +6,8 @@ import { cryptoKeysService } from '../modules/crypto-keys/index.js';
 import { participantsService } from '../modules/participants/index.js';
 import { participantOnboardingService } from '../modules/participant-onboarding/index.js';
 import { directoryService } from '../modules/directory/index.js';
+import { feesService } from '../modules/fees/index.js';
+import { eodService } from '../modules/eod/index.js';
 
 const ADMIN_EMAIL = 'admin@sika.local';
 const ADMIN_PASSWORD = 'admin1234';
@@ -46,6 +48,23 @@ const DEMO_PARTICIPANTS = Object.freeze([
     type: 'BANK',
     bic: 'TESTGHACAAA',
     supportedFormats: ['REST', 'ISO20022', 'ISO8583']
+  },
+  // Phase 5 demo participants used by scripts/demo-phase-5.sh.
+  {
+    code: 'P5BANK01',
+    name: 'Phase 5 Bank One',
+    legalName: 'Phase 5 Bank One PLC',
+    type: 'BANK',
+    bic: 'P5BANK01',
+    supportedFormats: ['REST']
+  },
+  {
+    code: 'P5BANK02',
+    name: 'Phase 5 Bank Two',
+    legalName: 'Phase 5 Bank Two PLC',
+    type: 'BANK',
+    bic: 'P5BANK02',
+    supportedFormats: ['REST']
   }
 ]);
 
@@ -71,7 +90,10 @@ const DEMO_ACCOUNTS = Object.freeze([
   { participantCode: 'BANK_TEST', accountNumber: '9999000007', accountName: 'Force Timeout' },
   { participantCode: 'BANK_TEST', accountNumber: '9999000008', accountName: 'Force Slow' },
   { participantCode: 'BANK_TEST', accountNumber: '9999000009', accountName: 'Force Intermittent' },
-  { participantCode: 'BANK_TEST', accountNumber: '9999000010', accountName: 'Force Unreachable' }
+  { participantCode: 'BANK_TEST', accountNumber: '9999000010', accountName: 'Force Unreachable' },
+  // Phase 5 demo accounts.
+  { participantCode: 'P5BANK01', accountNumber: '5100000001', accountName: 'P5 Sender' },
+  { participantCode: 'P5BANK02', accountNumber: '5200000001', accountName: 'P5 Receiver' }
 ]);
 
 const KYB_DOCS = ['INCORPORATION', 'BOG_LICENSE', 'TAX_CERT', 'BENEFICIAL_OWNERS', 'AML_POLICY'];
@@ -196,6 +218,53 @@ const main = async () => {
     summary.participants.push(r);
   }
   summary.accounts = await seedDemoAccounts();
+
+  // Phase 5 — open today's operating day so the orchestrator's CONFIRMED
+  // ledger posts have a calendar to land on.
+  const today = await eodService.ensureToday();
+  summary.operatingDay = {
+    operatingDate: today.operating_date instanceof Date
+      ? today.operating_date.toISOString().slice(0, 10)
+      : today.operating_date,
+    state: today.state
+  };
+
+  // Phase 5 — default fee schedules. Locked per PHASE-5 spec:
+  // GHS DOMESTIC_INSTANT       = flat 50 minor (GHS 0.50)
+  // GHS MOBILE_MONEY_INTEROP   = pct 25 bps, min 50, max 5000
+  const feeSchedules = [];
+  try {
+    feeSchedules.push(
+      await feesService.publishSchedule({
+        scheduleCode: 'P5-GHS-DOMESTIC-INSTANT-V1',
+        railClass: 'DOMESTIC_INSTANT',
+        currency: 'GHS',
+        feeType: 'FLAT',
+        flatMinor: '50',
+        bearer: 'DEBT'
+      })
+    );
+    feeSchedules.push(
+      await feesService.publishSchedule({
+        scheduleCode: 'P5-GHS-MMI-V1',
+        railClass: 'MOBILE_MONEY_INTEROP',
+        currency: 'GHS',
+        feeType: 'PERCENTAGE',
+        pctBps: 25,
+        minFeeMinor: '50',
+        maxFeeMinor: '5000',
+        bearer: 'DEBT'
+      })
+    );
+  } catch (e) {
+    if (e.code !== 'IDEMPOTENCY_CONFLICT') throw e;
+  }
+  summary.feeSchedules = feeSchedules.map((s) => ({
+    code: s.schedule_code,
+    railClass: s.rail_class,
+    currency: s.currency,
+    feeType: s.fee_type
+  }));
 
   writeFileSync('seed.json', JSON.stringify(summary, null, 2));
   console.log(JSON.stringify(summary, null, 2));

@@ -75,7 +75,7 @@ Spec: written when Phase 1 ends.
 - [x] B5.5 — `modules/eod/` (cutover, settlement report generation, snapshot, hash freeze, day rollover)
 - [x] B5.6 — `modules/reconciliation/` (continuous + EOD recon, exception queue)
 - [x] B5.7 — `modules/fees/` (per-class fee schedules, accrual at authorization, settlement netting)
-- [ ] B5.8 — Phase 5 exit gate: full day simulation with multiple cycles + EOD
+- [x] B5.8 — Phase 5 exit gate: full day simulation with multiple cycles + EOD
 
 ---
 
@@ -140,7 +140,7 @@ Spec: written when Phase 1 ends.
 
 ## Status
 
-- **Current phase:** 4 — Core transaction lifecycle (DONE)
-- **Current block:** B5.1 (Phase 5 master prompt awaited)
-- **Tests passing:** 471
-- **Migrations applied:** 17
+- **Current phase:** 5 — Settlement, liquidity & EOD (DONE)
+- **Current block:** B6.1 (Phase 6 master prompt awaited)
+- **Tests passing:** 532
+- **Migrations applied:** 25

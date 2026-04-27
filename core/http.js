@@ -46,5 +46,8 @@ export const errorHandler = (err, _req, res, _next) => {
   if (err instanceof AppError) {
     return res.status(err.status).json(fail(err.code, err.message, err.details));
   }
+  // Log the underlying error to stderr so operators can debug 500s. Body
+  // stays opaque to clients.
+  console.error('[errorHandler]', err?.stack || err?.message || err);
   return res.status(500).json(fail('INTERNAL', 'internal server error'));
 };

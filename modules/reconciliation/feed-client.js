@@ -35,7 +35,7 @@ export const createParticipantFeedClient = ({ db, mode = 'fake', overrideFetch }
         // an operator misconfiguring `recon_feed_mode` notices.
         return Promise.resolve({
           entries: [],
-          warning: `feed mode '${mode}' not implemented yet (Phase 10 fills)`
+          warning: `feed mode '${mode}' deferred to Phase 10`
         });
       }
 });
