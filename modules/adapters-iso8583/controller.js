@@ -6,6 +6,11 @@ export const createIso8583Controller = ({ service }) => ({
     const result = await service.inbound(req.body, version);
     sendOk(res, result, result.deduped ? 200 : 201);
   },
+  process: async (req, res) => {
+    const version = req.query.version || '1987';
+    const result = await service.process(req.body, version);
+    sendOk(res, result, result.deduped ? 200 : 201);
+  },
   outbound: async (req, res) => {
     const version = req.query.version || '1987';
     const mti = req.query.mti;

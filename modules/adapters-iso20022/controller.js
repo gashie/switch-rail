@@ -21,6 +21,10 @@ export const createIso20022Controller = ({ service }) => ({
     const result = await service.inboundCamt056(req.body);
     sendOk(res, result, result.deduped ? 200 : 201);
   },
+  process: async (req, res) => {
+    const result = await service.process(req.body);
+    sendOk(res, result, result.deduped ? 200 : 201);
+  },
   outbound: async (req, res) => {
     const xml = await service.outbound({ type: req.params.type, envelope: req.body });
     sendOk(res, { type: req.params.type, xml });

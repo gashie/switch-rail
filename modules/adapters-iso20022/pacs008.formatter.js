@@ -25,11 +25,30 @@ export const formatPacs008Xml = (env) => {
             PstlAdr: env.originator.countryCode ? { Ctry: env.originator.countryCode } : undefined
           },
           DbtrAcct: { Id: { Othr: { Id: env.originator.accountId } } },
-          DbtrAgt: env.originator.bic
-            ? { FinInstnId: { BICFI: env.originator.bic } }
+          // Carry both BICFI (canonical ISO 20022) and the rail's
+          // participantCode (under FinInstnId.Othr.Id) so the inverse parse
+          // can recover the exact participant identity without a lookup.
+          // Real participants will only ever publish BICFI; the rail's own
+          // round-trips lean on the proprietary id for fidelity.
+          DbtrAgt: (env.originator.bic || env.originator.participantCode)
+            ? {
+                FinInstnId: compactObject({
+                  BICFI: env.originator.bic,
+                  Othr: env.originator.participantCode
+                    ? { Id: env.originator.participantCode }
+                    : undefined
+                })
+              }
             : undefined,
-          CdtrAgt: env.beneficiary.bic
-            ? { FinInstnId: { BICFI: env.beneficiary.bic } }
+          CdtrAgt: (env.beneficiary.bic || env.beneficiary.participantCode)
+            ? {
+                FinInstnId: compactObject({
+                  BICFI: env.beneficiary.bic,
+                  Othr: env.beneficiary.participantCode
+                    ? { Id: env.beneficiary.participantCode }
+                    : undefined
+                })
+              }
             : undefined,
           Cdtr: {
             Nm: env.beneficiary.name,

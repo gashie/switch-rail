@@ -16,6 +16,13 @@ export const parsePacs008Xml = (xml) => {
 
   const dbtrBic = get(tx, 'DbtrAgt.FinInstnId.BICFI');
   const cdtrBic = get(tx, 'CdtrAgt.FinInstnId.BICFI');
+  // Rail-internal participantCode rides in FinInstnId.Othr.Id when the
+  // formatter put it there. Falls back to the 8-char BIC slice for
+  // pacs.008 messages produced by external participants.
+  const dbtrParticipant =
+    get(tx, 'DbtrAgt.FinInstnId.Othr.Id') || (dbtrBic ? dbtrBic.slice(0, 8) : 'UNKNOWN');
+  const cdtrParticipant =
+    get(tx, 'CdtrAgt.FinInstnId.Othr.Id') || (cdtrBic ? cdtrBic.slice(0, 8) : 'UNKNOWN');
   const dbtrAccountId =
     get(tx, 'DbtrAcct.Id.IBAN') || get(tx, 'DbtrAcct.Id.Othr.Id');
   const cdtrAccountId =
@@ -33,7 +40,7 @@ export const parsePacs008Xml = (xml) => {
     endToEndId,
     idempotencyKey: `iso20022:pacs008:${sourceMessageId}:${endToEndId}`,
     originator: {
-      participantCode: dbtrBic ? dbtrBic.slice(0, 8) : 'UNKNOWN',
+      participantCode: dbtrParticipant,
       accountId: dbtrAccountId || 'UNKNOWN',
       accountType: 'BANK_ACCOUNT',
       name: get(tx, 'Dbtr.Nm') || 'UNKNOWN',
@@ -41,7 +48,7 @@ export const parsePacs008Xml = (xml) => {
       countryCode: get(tx, 'Dbtr.PstlAdr.Ctry')
     },
     beneficiary: {
-      participantCode: cdtrBic ? cdtrBic.slice(0, 8) : 'UNKNOWN',
+      participantCode: cdtrParticipant,
       accountId: cdtrAccountId || 'UNKNOWN',
       accountType: 'BANK_ACCOUNT',
       name: get(tx, 'Cdtr.Nm') || 'UNKNOWN',

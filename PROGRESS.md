@@ -62,7 +62,7 @@ Spec: written when Phase 1 ends.
 - [x] B4.9 — Confirmation flow (cryptographic receipts to both sides)
 - [x] B4.10 — `modules/reversals/` (linked unwinds, return reason codes)
 - [x] B4.11 — End-to-end demo script: domestic P2P payment in REST format
-- [ ] B4.12 — Phase 4 exit gate: same demo runs in ISO 8583 and ISO 20022
+- [x] B4.12 — Phase 4 exit gate: same demo runs in ISO 8583 and ISO 20022
 
 ---
 
@@ -140,9 +140,7 @@ Spec: written when Phase 1 ends.
 
 ## Status
 
-- **Current phase:** 2 — Message envelope & adapters (DONE)
-- **Current block:** B3.1 (Phase 3 master prompt awaited)
-- **Tests passing:** 229
-- **Migrations applied:** 6
-- **Tests passing:** 189
-- **Migrations applied:** 5
+- **Current phase:** 4 — Core transaction lifecycle (DONE)
+- **Current block:** B5.1 (Phase 5 master prompt awaited)
+- **Tests passing:** 471
+- **Migrations applied:** 17
