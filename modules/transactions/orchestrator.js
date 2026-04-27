@@ -9,6 +9,7 @@ import { creditLegService } from '../credit-leg/index.js';
 import { transactionReceiptsService } from '../transaction-receipts/index.js';
 import { ledgerService, ACCOUNT_TYPES, JOURNAL_REASONS, accountCodeFor } from '../ledger/index.js';
 import { feesService } from '../fees/index.js';
+import { networkGraphEdgesService } from '../network-graph/index.js';
 // Importing settlement here is intentional — it registers the
 // applyJournalToPositions hook on the ledger as a side effect of module
 // load. The orchestrator is the load-bearing path for ledger writes, so
@@ -298,6 +299,10 @@ export const createOrchestrator = ({ db, transactionsService }) => {
           // the CONFIRMED transition with it.
           const ledger = await postConfirmedJournal(client, tx);
           const receipts = await transactionReceiptsService.issueReceipts(client, tx);
+          // Network-graph edge write — async-flavored but participates in
+          // the same transaction so it commits atomically. The scanner
+          // worker reads these edges out-of-band on its own schedule.
+          await networkGraphEdgesService.recordEdgeForTransaction(tx, { client });
           return { transaction: tx, deduped: false, creditLeg: cl, ledger, receipts };
         }
         if (cl.category === CATEGORY.TERMINAL_FAIL) {

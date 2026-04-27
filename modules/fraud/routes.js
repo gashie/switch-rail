@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { asyncHandler, validateBody } from '../../core/http.js';
 import * as db from '../../core/db.js';
 import { directoryService } from '../directory/index.js';
+import { networkGraphAlertsModel } from '../network-graph/index.js';
 import { requireAuth } from '../auth/index.js';
 import { proposeChangeBodySchema } from './schema.js';
 import { createRulesModel } from './rules-model.js';
@@ -24,7 +25,8 @@ const baselineWorker = createBaselineWorker({ baselineService });
 const ruleContextBuilder = createRuleContextBuilder({
   db,
   directoryService,
-  baselineModel
+  baselineModel,
+  alertsModel: networkGraphAlertsModel
 });
 const controller = createFraudController({ rulesService, signalsService });
 

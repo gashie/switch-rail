@@ -82,7 +82,12 @@ const accountAgeDays = (account) => {
   return Math.max(0, Math.floor((Date.now() - new Date(account.created_at).getTime()) / 86_400_000));
 };
 
-export const createRuleContextBuilder = ({ db, directoryService, baselineModel }) => {
+export const createRuleContextBuilder = ({
+  db,
+  directoryService,
+  baselineModel,
+  alertsModel
+}) => {
   const buildContext = async ({ transaction, envelope, client, signals: signalOverride }) => {
     const runOn = async (c) => {
       const [velocity, firstTime] = await Promise.all([
@@ -119,6 +124,16 @@ export const createRuleContextBuilder = ({ db, directoryService, baselineModel }
           .catch(() => null);
       }
 
+      // Network-graph signal (B6.5): is the beneficiary involved in any
+      // confirmed mule-ring alert?
+      let networkGraphFlag = false;
+      if (alertsModel) {
+        const beneKey = `${transaction.beneficiary_participant}:${transaction.beneficiary_account}`;
+        networkGraphFlag = await alertsModel
+          .isAccountInConfirmedMuleRing(c, beneKey)
+          .catch(() => false);
+      }
+
       return {
         transaction,
         envelope: envelope || null,
@@ -139,7 +154,7 @@ export const createRuleContextBuilder = ({ db, directoryService, baselineModel }
         signals: {
           sanctionsHit: false,
           watchlistHit: false,
-          networkGraphFlag: false,
+          networkGraphFlag,
           prevFlaggedByPeer: false,
           peerFlagSeverity: 0,
           ...signalOverride

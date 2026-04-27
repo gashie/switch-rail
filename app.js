@@ -32,6 +32,7 @@ import { reconciliationRoutes } from './modules/reconciliation/index.js';
 import { feesRoutes } from './modules/fees/index.js';
 import { fraudRoutes } from './modules/fraud/index.js';
 import { sanctionsRoutes } from './modules/sanctions/index.js';
+import { networkGraphRoutes } from './modules/network-graph/index.js';
 
 export const buildApp = () => {
   const app = express();
@@ -77,6 +78,7 @@ export const buildApp = () => {
   app.use('/fees', feesRoutes);
   app.use('/fraud', fraudRoutes);
   app.use('/sanctions', sanctionsRoutes);
+  app.use('/network-graph', networkGraphRoutes);
   app.use(errorHandler);
 
   return app;
