@@ -105,7 +105,7 @@ Spec: written when Phase 1 ends.
 
 ## Phase 8 — Overlay services (autonomous)
 
-- [ ] B8.1 — `modules/overlays-r2p/` (Request to Pay, payer authorization)
+- [x] B8.1 — `modules/overlays-r2p/` (Request to Pay, payer authorization)
 - [ ] B8.2 — `modules/overlays-qr/` (EMVCo static + dynamic QR)
 - [ ] B8.3 — `modules/overlays-mandates/` (recurring with caps, instant revoke)
 - [ ] B8.4 — `modules/overlays-bulk/` (millions of lines, per-line response)

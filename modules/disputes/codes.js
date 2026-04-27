@@ -11,7 +11,13 @@ export const REASON_CODES = Object.freeze({
   WRONG_AMOUNT:        'WRONG_AMOUNT',
   WRONG_BENEFICIARY:   'WRONG_BENEFICIARY',
   TECHNICAL:           'TECHNICAL',
-  REGULATORY:          'REGULATORY'
+  REGULATORY:          'REGULATORY',
+  // Phase 8 — overlay-specific dispute reason codes.
+  R2P_DUPLICATE:           'R2P_DUPLICATE',
+  MANDATE_UNAUTHORIZED:    'MANDATE_UNAUTHORIZED',
+  MANDATE_EXCESS:          'MANDATE_EXCESS',
+  REFUND_DUPLICATE:        'REFUND_DUPLICATE',
+  ESCROW_RELEASE_DISPUTED: 'ESCROW_RELEASE_DISPUTED'
 });
 
 // Filing window: how long after the original CONFIRMED transaction a dispute
@@ -26,7 +32,13 @@ export const SLA_WINDOWS = Object.freeze({
   [REASON_CODES.WRONG_AMOUNT]:       { fileWithinDays: 30,  responseDays: 5, autoResolvable: null },
   [REASON_CODES.WRONG_BENEFICIARY]:  { fileWithinDays: 30,  responseDays: 5, autoResolvable: 'r-wrong-beneficiary' },
   [REASON_CODES.TECHNICAL]:          { fileWithinDays: 30,  responseDays: 3, autoResolvable: 'r-technical' },
-  [REASON_CODES.REGULATORY]:         { fileWithinDays: null, responseDays: 1, autoResolvable: null }
+  [REASON_CODES.REGULATORY]:         { fileWithinDays: null, responseDays: 1, autoResolvable: null },
+  // Phase 8 overlay reason codes.
+  [REASON_CODES.R2P_DUPLICATE]:           { fileWithinDays: 90,  responseDays: 3, autoResolvable: 'r-r2p-duplicate' },
+  [REASON_CODES.MANDATE_UNAUTHORIZED]:    { fileWithinDays: 60,  responseDays: 5, autoResolvable: null },
+  [REASON_CODES.MANDATE_EXCESS]:          { fileWithinDays: 60,  responseDays: 5, autoResolvable: 'r-mandate-excess' },
+  [REASON_CODES.REFUND_DUPLICATE]:        { fileWithinDays: 90,  responseDays: 3, autoResolvable: 'r-refund-duplicate' },
+  [REASON_CODES.ESCROW_RELEASE_DISPUTED]: { fileWithinDays: 60,  responseDays: 7, autoResolvable: null }
 });
 
 export const OUTCOMES = Object.freeze({

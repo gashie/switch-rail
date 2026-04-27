@@ -63,6 +63,20 @@ export const config = Object.freeze({
   // Phase 7 — disputes & adjudication
   disputesPort: Number(process.env.DISPUTES_PORT || 4601),
   disputesPortalRateLimitPerMin: Number(process.env.DISPUTES_PORTAL_RATE_LIMIT_PER_MIN || 30),
+  // Phase 8 — overlay services
+  overlaysR2pPort: Number(process.env.OVERLAYS_R2P_PORT || 4701),
+  overlaysQrPort: Number(process.env.OVERLAYS_QR_PORT || 4702),
+  overlaysMandatesPort: Number(process.env.OVERLAYS_MANDATES_PORT || 4703),
+  overlaysBulkPort: Number(process.env.OVERLAYS_BULK_PORT || 4704),
+  overlaysCashoutPort: Number(process.env.OVERLAYS_CASHOUT_PORT || 4705),
+  overlaysRefundsPort: Number(process.env.OVERLAYS_REFUNDS_PORT || 4706),
+  overlaysEscrowPort: Number(process.env.OVERLAYS_ESCROW_PORT || 4707),
+  overlaysSplitPort: Number(process.env.OVERLAYS_SPLIT_PORT || 4708),
+  mandateSchedulerIntervalSeconds: Number(process.env.MANDATE_SCHEDULER_INTERVAL_SECONDS || 60),
+  bulkRunnerConcurrency: Number(process.env.BULK_RUNNER_CONCURRENCY || 10),
+  cashoutOtpExpiresInMinutes: Number(process.env.CASHOUT_OTP_EXPIRES_IN_MINUTES || 15),
+  cashoutOtpMaxAttempts: Number(process.env.CASHOUT_OTP_MAX_ATTEMPTS || 3),
+  refundWindowDays: Number(process.env.REFUND_WINDOW_DAYS || 365),
   // Phase 4: when running tests we want short timeouts; production demo uses
   // the full 10s/2s budgets. Override with TX_TEST_MODE=true.
   txTestMode: (process.env.TX_TEST_MODE || 'false') === 'true'
