@@ -23,6 +23,7 @@ import { participantSimulatorRoutes } from './modules/participant-simulator/inde
 import { creditLegRoutes } from './modules/credit-leg/index.js';
 import { transactionReceiptsRoutes } from './modules/transaction-receipts/index.js';
 import { reversalsRoutes } from './modules/reversals/index.js';
+import { ledgerRoutes } from './modules/ledger/index.js';
 
 export const buildApp = () => {
   const app = express();
@@ -59,6 +60,7 @@ export const buildApp = () => {
   app.use('/credit-leg', creditLegRoutes);
   app.use('/transaction-receipts', transactionReceiptsRoutes);
   app.use('/reversals', reversalsRoutes);
+  app.use('/ledger', ledgerRoutes);
   app.use(errorHandler);
 
   return app;

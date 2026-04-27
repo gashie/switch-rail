@@ -7,6 +7,7 @@ import { createAuthorizationService } from '../authorization/index.js';
 import { railOrchestrationService } from '../rail-orchestration/index.js';
 import { creditLegService } from '../credit-leg/index.js';
 import { transactionReceiptsService } from '../transaction-receipts/index.js';
+import { ledgerService, ACCOUNT_TYPES, JOURNAL_REASONS, accountCodeFor } from '../ledger/index.js';
 import { CATEGORY } from '../../core/codes.js';
 import {
   DEFAULT_DAILY_CAP_MINOR,
@@ -15,6 +16,63 @@ import {
 import { isTerminal, STATES } from './states.js';
 
 const SUCCESS_RESPONSE_CODE = 'ACSC';
+
+// Operating date for the orchestrator's ledger posting. Today (UTC) until
+// B5.5 lights up the operating-day model and stamps the column on the
+// transaction itself.
+const operatingDateFor = (tx) => {
+  const ts = tx.authorized_at || tx.created_at || new Date();
+  const d = ts instanceof Date ? ts : new Date(ts);
+  return d.toISOString().slice(0, 10);
+};
+
+const postConfirmedJournal = async (client, tx) => {
+  const currency = tx.amount_currency;
+  // Make sure both PARTICIPANT_SETTLEMENT accounts exist before posting.
+  // ensureAccountOnClient is idempotent so the same payment can be retried
+  // through the orchestrator without account-creation errors.
+  await ledgerService._internal.ensureAccountOnClient(client, {
+    accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
+    ownerId: tx.originator_participant,
+    currency
+  });
+  await ledgerService._internal.ensureAccountOnClient(client, {
+    accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
+    ownerId: tx.beneficiary_participant,
+    currency
+  });
+  const amount = String(tx.amount_value);
+  const entries = [
+    {
+      accountCode: accountCodeFor({
+        accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
+        ownerId: tx.originator_participant,
+        currency
+      }),
+      side: 'DR',
+      amount,
+      currency
+    },
+    {
+      accountCode: accountCodeFor({
+        accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
+        ownerId: tx.beneficiary_participant,
+        currency
+      }),
+      side: 'CR',
+      amount,
+      currency
+    }
+  ];
+  return ledgerService.postJournal(client, {
+    reason: JOURNAL_REASONS.TRANSACTION_CONFIRMED,
+    referenceType: 'transaction',
+    referenceId: tx.id,
+    operatingDate: operatingDateFor(tx),
+    entries,
+    metadata: { endToEndId: tx.end_to_end_id, railClass: tx.rail_class }
+  });
+};
 
 const toBigIntCap = (value, fallback) => {
   if (value === undefined || value === null || value === '') return fallback;
@@ -206,10 +264,12 @@ export const createOrchestrator = ({ db, transactionsService }) => {
             occurredBy: 'system',
             payload: { creditedAt: cl.raw?.data?.creditedAt }
           });
-          // Receipts issued in the SAME transaction so there's no observable
-          // window where a CONFIRMED txn lacks proof.
+          // Order locked per PHASE-5: state → ledger → receipts. All in the
+          // same withTransaction so a ledger or receipt failure rolls back
+          // the CONFIRMED transition with it.
+          const ledger = await postConfirmedJournal(client, tx);
           const receipts = await transactionReceiptsService.issueReceipts(client, tx);
-          return { transaction: tx, deduped: false, creditLeg: cl, receipts };
+          return { transaction: tx, deduped: false, creditLeg: cl, ledger, receipts };
         }
         if (cl.category === CATEGORY.TERMINAL_FAIL) {
           tx = await finalizeWithError(client, tx, cl.reasonCode, cl.raw?.error?.message || cl.reasonCode);

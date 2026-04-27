@@ -6,6 +6,7 @@ import { cryptoKeysService } from '../crypto-keys/index.js';
 import { participantsService } from '../participants/index.js';
 import { transactionsService } from '../transactions/index.js';
 import { transactionReceiptsService } from '../transaction-receipts/index.js';
+import { ledgerService, ACCOUNT_TYPES, JOURNAL_REASONS, accountCodeFor } from '../ledger/index.js';
 import { auditService } from '../audit/index.js';
 import { withTimeout } from '../credit-leg/index.js';
 import { byName as railClassByName } from '../rail-orchestration/index.js';
@@ -246,9 +247,54 @@ export const createTransactionRecoveryService = ({
             payload: { recovery: true, attempts: attemptsAfter, creditedAt: probe.creditedAt }
           }
         );
-        // Issue receipts atomically with the recovery-driven CONFIRMED.
+        // Recovery-driven CONFIRMED follows the same locked order as the
+        // orchestrator: state → ledger → receipts, all in this client's
+        // transaction.
+        const currency = tx.amount_currency;
+        await ledgerService._internal.ensureAccountOnClient(client, {
+          accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
+          ownerId: tx.originator_participant,
+          currency
+        });
+        await ledgerService._internal.ensureAccountOnClient(client, {
+          accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
+          ownerId: tx.beneficiary_participant,
+          currency
+        });
+        const operatingDate = (tx.authorized_at || tx.created_at || new Date()).toISOString
+          ? (tx.authorized_at || tx.created_at).toISOString().slice(0, 10)
+          : new Date().toISOString().slice(0, 10);
+        const ledger = await ledgerService.postJournal(client, {
+          reason: JOURNAL_REASONS.TRANSACTION_CONFIRMED,
+          referenceType: 'transaction',
+          referenceId: tx.id,
+          operatingDate,
+          entries: [
+            {
+              accountCode: accountCodeFor({
+                accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
+                ownerId: tx.originator_participant,
+                currency
+              }),
+              side: 'DR',
+              amount: String(tx.amount_value),
+              currency
+            },
+            {
+              accountCode: accountCodeFor({
+                accountType: ACCOUNT_TYPES.PARTICIPANT_SETTLEMENT,
+                ownerId: tx.beneficiary_participant,
+                currency
+              }),
+              side: 'CR',
+              amount: String(tx.amount_value),
+              currency
+            }
+          ],
+          metadata: { recovery: true, endToEndId: tx.end_to_end_id }
+        });
         const receipts = await transactionReceiptsService.issueReceipts(client, tx);
-        return { id, terminal: 'CONFIRMED', attempts: attemptsAfter, transaction: tx, probe, receipts };
+        return { id, terminal: 'CONFIRMED', attempts: attemptsAfter, transaction: tx, probe, ledger, receipts };
       }
       if (probe.outcome === PROBE_OUTCOMES.NOT_CREDITED) {
         const tx = await transactionsService._internal.transitionOnClient(

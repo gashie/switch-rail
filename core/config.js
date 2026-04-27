@@ -36,6 +36,18 @@ export const config = Object.freeze({
   creditLegPort: Number(process.env.CREDIT_LEG_PORT || 4304),
   transactionReceiptsPort: Number(process.env.TRANSACTION_RECEIPTS_PORT || 4305),
   reversalsPort: Number(process.env.REVERSALS_PORT || 4306),
+  // Phase 5 — settlement, liquidity, EOD
+  ledgerPort: Number(process.env.LEDGER_PORT || 4401),
+  settlementPort: Number(process.env.SETTLEMENT_PORT || 4402),
+  liquidityPort: Number(process.env.LIQUIDITY_PORT || 4403),
+  settlementCyclePort: Number(process.env.SETTLEMENT_CYCLE_PORT || 4404),
+  eodPort: Number(process.env.EOD_PORT || 4405),
+  reconciliationPort: Number(process.env.RECONCILIATION_PORT || 4406),
+  feesPort: Number(process.env.FEES_PORT || 4407),
+  operatorTimezone: process.env.OPERATOR_TIMEZONE || 'Africa/Accra',
+  intradayCycleHours: Number(process.env.INTRADAY_CYCLE_HOURS || 4),
+  reconBreakAgeSeconds: Number(process.env.RECON_BREAK_AGE_SECONDS || 900),
+  reconFeedMode: process.env.RECON_FEED_MODE || 'fake',
   niaMode: process.env.NIA_MODE || 'fake',
   // Phase 4: when running tests we want short timeouts; production demo uses
   // the full 10s/2s budgets. Override with TX_TEST_MODE=true.
