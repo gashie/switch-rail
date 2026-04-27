@@ -266,3 +266,41 @@ export const stripVolatile = (env) => {
   return rest;
 };
 Located at tests/helpers/stripVolatile.js (top-level tests/, not inside any module).
+
+
+Operator kill-switch in every state machine
+Any state machine in any module must allow terminate (or equivalent terminal kill) from any non-terminal state. Operators and regulators need a kill-switch that doesn't require working through normal transitions. Phase 3's participant onboarding established this; every later phase follows it.
+In Phase 4 (transactions): a transaction in any non-terminal state can be force-rejected by an authorized operator with reason code OPERATOR_KILL_SWITCH. In Phase 7 (disputes): same. In Phase 8 (mandates): same. In Phase 9 (cross-border): same.
+Audit event format: <entity>.terminated with payload {reason, operatorId, fromState}.
+Counter durability via separate connection
+When a service tracks attempts on a security-sensitive operation (OTP attempts, dispute filing attempts, fraud verification attempts, etc.), the attempt counter increments must happen in a separate DB connection that commits independently — not inside the same transaction as the operation itself.
+Reason: if the operation throws (wrong code, bad input, etc.), the surrounding transaction rolls back and the increment is lost. Attackers retry indefinitely.
+Canonical shape (proven in Phase 3 OTP):
+js// inside service.js
+export const consumeWithAttempt = async ({ id, code }) => {
+  // 1. Increment attempts in its OWN connection. Commit immediately.
+  await withClient(async (c) => {
+    await c.query(
+      `UPDATE challenges SET attempts = attempts + 1 WHERE id = $1`,
+      [id]
+    );
+  });
+
+  // 2. Now check max attempts
+  const challenge = await findById(id);
+  if (challenge.attempts > challenge.maxAttempts) {
+    throw new AppError('TOO_MANY_ATTEMPTS', '...', 429);
+  }
+
+  // 3. Proceed with the actual operation in a fresh transaction
+  return withTransaction(async (c) => {
+    if (challenge.code !== code) throw new AppError('INVALID_CODE', '...', 400);
+    // ... mark consumed, etc.
+  });
+};
+Apply this pattern in:
+
+Phase 4 transaction recovery (retry attempt counter)
+Phase 7 dispute filing (max attempts per case)
+Phase 6 fraud verification challenges
+Phase 9 cross-border travel rule challenges
