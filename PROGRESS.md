@@ -52,8 +52,8 @@ Spec: written when Phase 1 ends.
 ## Phase 4 — Core transaction lifecycle (autonomous)
 
 - [x] B4.1 — `modules/transactions/` (envelope ingestion, idempotency)
-- [ ] B4.2 — Authorization pipeline (limits, status, sanctions stub, fraud stub, liquidity stub)
-- [ ] B4.3 — Structured response code taxonomy (success/retryable/terminal/ambiguous)
+- [x] B4.2 — Authorization pipeline (limits, status, sanctions stub, fraud stub, liquidity stub)
+- [x] B4.3 — Structured response code taxonomy (success/retryable/terminal/ambiguous)
 - [ ] B4.4 — `modules/routing/` (BIN routing, hot reload)
 - [ ] B4.5 — Multi-rail orchestration (GIP/MMI/ACH path selection)
 - [ ] B4.6 — `modules/credit-leg/` (forward to beneficiary, timeout enforcement)
