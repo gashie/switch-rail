@@ -304,3 +304,33 @@ Phase 4 transaction recovery (retry attempt counter)
 Phase 7 dispute filing (max attempts per case)
 Phase 6 fraud verification challenges
 Phase 9 cross-border travel rule challenges
+
+
+
+Audit-event-then-operator-confirm for ambiguous money movement
+When the rail is unsure whether a credit was applied (recovery exhaustion, status-check ambiguity, cross-border timeout, etc.), the rail does not auto-execute a reversal. Auto-reversing a credit that was actually applied debits the participant a second time.
+The canonical pattern (proven in Phase 4 recovery):
+
+Transition to terminal state (FAILED, or whatever applies).
+Write an audit event of the form <entity>.reversal_needed with full context.
+Stop.
+
+An operator (human, or a Phase 6 fraud subscriber, or a Phase 7 dispute consumer) picks up the audit signal and decides whether to execute the reversal. The decision is logged as a separate audit event.
+This rule applies in:
+
+Phase 4: transaction.reversal_needed after RECON_FAILED (already implemented).
+Phase 5: settlement.adjustment_needed after intraday recon break that can't be auto-resolved.
+Phase 7: dispute.reversal_needed after adjudication ruling.
+Phase 9: crossborder.reversal_needed after foreign-rail timeout.
+
+Function signature as rule enforcement
+When a rule must not be violated, the function signature itself should make violation impossible. Counter durability is the proof case: bumpAttemptsOnSeparateConnection(db, ...) takes the pool, not a transaction client. There is no way to accidentally call it inside a transaction.
+Apply this thinking in Phase 5:
+
+Ledger writes take a ledgerClient (a wrapper that enforces double-entry balance) rather than a raw pg client. A caller cannot accidentally write a single-sided entry.
+Settlement-cycle close takes a cycleId and a closing-reason — it's impossible to "accidentally close" without explicit reason.
+EOD cutover takes a cutoverConfirmation token issued by an authorized operator — it's impossible to roll the day forward without explicit authorization.
+
+Atomic state-transition + side-effect issuance
+When a state transition must produce a side effect (receipt, statement, settlement entry), both happen in the same DB transaction. Proven in Phase 4 (CONFIRMED transition + receipt issuance) and again in recovery (CONFIRMED from PENDING_RECONCILIATION + receipt issuance).
+Phase 5 reuses the pattern: every successful credit leg posts to the ledger in the same transaction as the CONFIRMED state transition. EOD snapshot generation issues a hash-frozen statement in the same transaction as the day-rollover.
