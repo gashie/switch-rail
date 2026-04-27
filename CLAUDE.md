@@ -348,3 +348,19 @@ Performance budget for in-line authorization
 Every check inside the authorization pipeline (Phase 4 B4.2 + Phase 6 fraud/sanctions/network-graph) has a hard latency budget. The whole pipeline must complete in under 100ms p95 for DOMESTIC_INSTANT transactions. Per-check budgets:
 Checkp95 budgetduplicates5msaccount-status5mssanctions15msfraud (rules)25msfraud (ML scoring hook)25msnetwork-graph (cache hit)10mslimits10msliquidity5ms
 Sum target: 100ms p95. Anything heavier must split into a fast path (in-line, deterministic) and a slow path (async, write-only). The slow path can flag for review or adjust reputation, but it does not block the wire.
+
+Per-reason-code SLA windows
+When a workflow has multiple reason codes that each carry their own deadline (Phase 7 disputes, future regulatory escalations, future cross-border challenge windows), the SLA window is a property of the reason code, not the workflow.
+Canonical shape (proven in Phase 6 fast-track reversal at 80 days, generalized for Phase 7):
+js// modules/<workflow>/sla-config.js
+export const SLA_WINDOWS = Object.freeze({
+  FRAUD: { fileWithinDays: 80, respondWithinDays: 5 },
+  UNAUTHORIZED: { fileWithinDays: 60, respondWithinDays: 5 },
+  DUPLICATE: { fileWithinDays: 90, respondWithinDays: 3 },
+  GOODS_NOT_RECEIVED: { fileWithinDays: 120, respondWithinDays: 7 },
+  // ... etc
+});
+Window enforcement happens at file-time and at adjudication-clock-tick time. The reason code is locked at filing — changing the reason mid-case would change the SLA, which is a regulatory hazard.
+One workflow ≠ one process
+A workflow may have an automated path and a manual path. Phase 6 fast-track is the proof: 95%+ of fraud cases follow the automated freeze→confirm path; ambiguous cases route to operator manual confirm. Phase 7 disputes follow the same: clear-cut auto-resolution (e.g. proven duplicate transaction with matching idempotency markers) skips human review; ambiguous cases route to adjudicators.
+The split point is the dispute reason and the strength of the evidence. Auto-resolution is conservative — when in doubt, route to a human. Audit-event-then-operator-confirm rule still applies to the money-movement step.
