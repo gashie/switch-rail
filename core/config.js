@@ -24,5 +24,11 @@ export const config = Object.freeze({
   adaptersIso20022Port: Number(process.env.ADAPTERS_ISO20022_PORT || 4103),
   adaptersIso8583Port: Number(process.env.ADAPTERS_ISO8583_PORT || 4104),
   adaptersSwiftPort: Number(process.env.ADAPTERS_SWIFT_PORT || 4105),
-  adaptersBulkPort: Number(process.env.ADAPTERS_BULK_PORT || 4106)
+  adaptersBulkPort: Number(process.env.ADAPTERS_BULK_PORT || 4106),
+  participantsPort: Number(process.env.PARTICIPANTS_PORT || 4201),
+  directoryPort: Number(process.env.DIRECTORY_PORT || 4202),
+  aliasesPort: Number(process.env.ALIASES_PORT || 4203),
+  nameEnquiryPort: Number(process.env.NAME_ENQUIRY_PORT || 4204),
+  participantOnboardingPort: Number(process.env.PARTICIPANT_ONBOARDING_PORT || 4205),
+  niaMode: process.env.NIA_MODE || 'fake'
 });
