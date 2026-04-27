@@ -9,7 +9,9 @@ export const ACCOUNT_TYPES = Object.freeze({
   RAIL_SUSPENSE:             'RAIL_SUSPENSE',
   RAIL_REVERSAL:             'RAIL_REVERSAL',
   OPERATOR_RTGS_NOSTRO:      'OPERATOR_RTGS_NOSTRO',
-  RAIL_DISPUTE_RESERVE:      'RAIL_DISPUTE_RESERVE'
+  RAIL_DISPUTE_RESERVE:      'RAIL_DISPUTE_RESERVE',
+  // Phase 8 — escrow overlay (B8.7).
+  RAIL_ESCROW:               'RAIL_ESCROW'
 });
 
 export const JOURNAL_REASONS = Object.freeze({
@@ -23,7 +25,10 @@ export const JOURNAL_REASONS = Object.freeze({
   TOPUP:                    'TOPUP',
   // Phase 7 — disputes & adjudication.
   DISPUTE_RESERVE_HOLD:     'DISPUTE_RESERVE_HOLD',
-  DISPUTE_RESERVE_RELEASE:  'DISPUTE_RESERVE_RELEASE'
+  DISPUTE_RESERVE_RELEASE:  'DISPUTE_RESERVE_RELEASE',
+  // Phase 8 — escrow overlay (B8.7).
+  ESCROW_HOLD:              'ESCROW_HOLD',
+  ESCROW_RELEASE:           'ESCROW_RELEASE'
 });
 
 export const SIDES = Object.freeze({ DR: 'DR', CR: 'CR' });

@@ -111,7 +111,7 @@ Spec: written when Phase 1 ends.
 - [x] B8.4 — `modules/overlays-bulk/` (millions of lines, per-line response)
 - [x] B8.5 — `modules/overlays-cashout/` (agent cash-out flow)
 - [x] B8.6 — `modules/overlays-refunds/` (cryptographically linked to original)
-- [ ] B8.7 — `modules/overlays-escrow/` (hold + conditional release)
+- [x] B8.7 — `modules/overlays-escrow/` (hold + conditional release)
 - [ ] B8.8 — `modules/overlays-split/` (one debit, N atomic credits) + Phase 8 exit gate
 
 ---
