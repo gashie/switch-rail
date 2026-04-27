@@ -48,6 +48,7 @@ const cleanup = async () => {
   await query(`DELETE FROM ledger_accounts`);
   await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
+  await query(`DELETE FROM watchlist_screenings`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM liquidity_topups WHERE participant_code IN ($1,$2)`, [A, B]);
   await query(`DELETE FROM liquidity_limits WHERE participant_code IN ($1,$2)`, [A, B]);

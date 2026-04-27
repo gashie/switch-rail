@@ -97,7 +97,7 @@ const toBigIntCap = (value, fallback) => {
   }
 };
 
-const fetchAuthContext = async (client, { transaction, originatorParticipant }) => {
+const fetchAuthContext = async (client, { transaction, originatorParticipant, envelope }) => {
   const [originatorAccount, beneficiaryAccount] = await Promise.all([
     directoryService
       .findByAccount({
@@ -135,6 +135,7 @@ const fetchAuthContext = async (client, { transaction, originatorParticipant }) 
   return {
     transaction,
     client,
+    envelope,
     originatorAccount,
     beneficiaryAccount,
     recentMatchingE2E,
@@ -219,7 +220,7 @@ export const createOrchestrator = ({ db, transactionsService }) => {
         const originatorParticipant = await participantsService
           .getByCode(tx.originator_participant)
           .catch(() => null);
-        const ctx = await fetchAuthContext(client, { transaction: tx, originatorParticipant });
+        const ctx = await fetchAuthContext(client, { transaction: tx, originatorParticipant, envelope });
         const authResult = await authorizationService.authorize(ctx);
         if (!authResult.ok) {
           tx = await finalizeWithError(client, tx, authResult.code, authResult.message);

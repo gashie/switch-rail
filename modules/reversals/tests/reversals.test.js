@@ -20,6 +20,7 @@ let server;
 const cleanup = async () => {
   await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
+  await query(`DELETE FROM watchlist_screenings`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'rev-%'`);
   await query(`DELETE FROM accounts WHERE participant_code IN ($1,$2)`, [ORIG, BENE]);
@@ -130,6 +131,7 @@ beforeEach(async () => {
   await query(`DELETE FROM accounts WHERE participant_code = $1 AND account_number LIKE '02%'`, [BENE]);
   await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
+  await query(`DELETE FROM watchlist_screenings`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'rev-%'`);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'transaction.%' OR event_type LIKE 'envelope.%'`);

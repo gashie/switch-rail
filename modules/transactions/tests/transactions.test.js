@@ -35,6 +35,7 @@ const baseEnvelope = (overrides = {}) =>
 const cleanup = async () => {
   await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
+  await query(`DELETE FROM watchlist_screenings`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'tx-test-%'`);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'transaction.%' OR event_type LIKE 'envelope.%'`);

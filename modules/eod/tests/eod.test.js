@@ -30,6 +30,7 @@ const cleanup = async () => {
   await query(`DELETE FROM ledger_accounts`);
   await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
+  await query(`DELETE FROM watchlist_screenings`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'eod-%'`);
   await query(`DELETE FROM accounts WHERE participant_code IN ($1,$2)`, [ORIG, BENE]);
@@ -111,6 +112,7 @@ beforeEach(async () => {
   await query(`DELETE FROM settlement_positions`);
   await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
+  await query(`DELETE FROM watchlist_screenings`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'eod-%'`);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'transaction.%' OR event_type LIKE 'envelope.%' OR event_type LIKE 'ledger.%' OR event_type LIKE 'cycle.%' OR event_type LIKE 'eod.%'`);

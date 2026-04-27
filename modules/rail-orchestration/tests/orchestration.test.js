@@ -18,6 +18,7 @@ const F = 'RCFOREIGN';
 const cleanup = async () => {
   await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
+  await query(`DELETE FROM watchlist_screenings`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'rc-%'`);
   await query(`DELETE FROM audit_events WHERE event_type LIKE 'transaction.%' OR event_type LIKE 'envelope.%' OR event_type LIKE 'participant.%'`);
@@ -45,6 +46,7 @@ afterAll(async () => {
 beforeEach(async () => {
   await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
+  await query(`DELETE FROM watchlist_screenings`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'rc-%'`);
 });

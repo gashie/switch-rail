@@ -32,6 +32,7 @@ let baseUrl;
 const cleanup = async () => {
   await query(`DELETE FROM transaction_receipts`);
   await query(`DELETE FROM transaction_status_history`);
+  await query(`DELETE FROM watchlist_screenings`);
   await query(`DELETE FROM transactions`);
   await query(`DELETE FROM envelopes WHERE source_message_id LIKE 'p4p-%'`);
   const codes = PARTICIPANTS.map((p) => p.code);

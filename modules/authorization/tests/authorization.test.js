@@ -141,12 +141,16 @@ describe('authorization — individual checks', () => {
     expect(r).toMatchObject({ pass: false, code: 'TRANSACTION_FORBIDDEN' });
   });
 
-  it('sanctions: returns pass with framework metadata (Phase 6 fills)', () => {
-    const r = sanctions({
+  it('sanctions: returns pass with framework metadata when no watchlist hit', async () => {
+    const r = await sanctions({
       transaction: {
+        id: uuidv7(),
         originator_participant: 'BANK01',
-        beneficiary_participant: 'BANK02'
-      }
+        beneficiary_participant: 'BANK02',
+        originator_account: 'AUTHTESTACCT',
+        beneficiary_account: 'AUTHTESTBENE'
+      },
+      skipFraudPersistence: true
     });
     expect(r.pass).toBe(true);
     expect(r.framework.originatorScreened).toBe('BANK01');
