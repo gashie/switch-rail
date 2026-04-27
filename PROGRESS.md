@@ -60,7 +60,7 @@ Spec: written when Phase 1 ends.
 - [x] B4.7 — Atomic outcome (debit + credit commit-or-rollback in one transaction)
 - [x] B4.8 — Recovery state (timeout retry, escalation, eventual reversal)
 - [x] B4.9 — Confirmation flow (cryptographic receipts to both sides)
-- [ ] B4.10 — `modules/reversals/` (linked unwinds, return reason codes)
+- [x] B4.10 — `modules/reversals/` (linked unwinds, return reason codes)
 - [ ] B4.11 — End-to-end demo script: domestic P2P payment in REST format
 - [ ] B4.12 — Phase 4 exit gate: same demo runs in ISO 8583 and ISO 20022
 
