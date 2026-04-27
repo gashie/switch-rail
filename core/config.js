@@ -60,6 +60,9 @@ export const config = Object.freeze({
   fastTrackReversalWindowDays: Number(process.env.FAST_TRACK_REVERSAL_WINDOW_DAYS || 80),
   fastTrackInvokeMonthlyQuota: Number(process.env.FAST_TRACK_INVOKE_MONTHLY_QUOTA || 1000),
   niaMode: process.env.NIA_MODE || 'fake',
+  // Phase 7 — disputes & adjudication
+  disputesPort: Number(process.env.DISPUTES_PORT || 4601),
+  disputesPortalRateLimitPerMin: Number(process.env.DISPUTES_PORTAL_RATE_LIMIT_PER_MIN || 30),
   // Phase 4: when running tests we want short timeouts; production demo uses
   // the full 10s/2s budgets. Override with TX_TEST_MODE=true.
   txTestMode: (process.env.TX_TEST_MODE || 'false') === 'true'
