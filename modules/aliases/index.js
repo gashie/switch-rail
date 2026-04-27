@@ -1,8 +1,10 @@
 export {
   default as aliasesRoutes,
   service as aliasesService,
-  verificationService as aliasesVerificationService
+  verificationService as aliasesVerificationService,
+  portabilityService as aliasesPortabilityService
 } from './routes.js';
+export { COOLING_PERIOD_MS } from './portability-service.js';
 export { normalizeAliasValue } from './service.js';
 export {
   ALIAS_TYPES,
