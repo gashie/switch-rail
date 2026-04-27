@@ -30,5 +30,14 @@ export const config = Object.freeze({
   aliasesPort: Number(process.env.ALIASES_PORT || 4203),
   nameEnquiryPort: Number(process.env.NAME_ENQUIRY_PORT || 4204),
   participantOnboardingPort: Number(process.env.PARTICIPANT_ONBOARDING_PORT || 4205),
-  niaMode: process.env.NIA_MODE || 'fake'
+  transactionsPort: Number(process.env.TRANSACTIONS_PORT || 4301),
+  routingPort: Number(process.env.ROUTING_PORT || 4302),
+  participantSimulatorPort: Number(process.env.PARTICIPANT_SIMULATOR_PORT || 4303),
+  creditLegPort: Number(process.env.CREDIT_LEG_PORT || 4304),
+  transactionReceiptsPort: Number(process.env.TRANSACTION_RECEIPTS_PORT || 4305),
+  reversalsPort: Number(process.env.REVERSALS_PORT || 4306),
+  niaMode: process.env.NIA_MODE || 'fake',
+  // Phase 4: when running tests we want short timeouts; production demo uses
+  // the full 10s/2s budgets. Override with TX_TEST_MODE=true.
+  txTestMode: (process.env.TX_TEST_MODE || 'false') === 'true'
 });

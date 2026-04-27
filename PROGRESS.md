@@ -51,7 +51,7 @@ Spec: written when Phase 1 ends.
 
 ## Phase 4 — Core transaction lifecycle (autonomous)
 
-- [ ] B4.1 — `modules/transactions/` (envelope ingestion, idempotency)
+- [x] B4.1 — `modules/transactions/` (envelope ingestion, idempotency)
 - [ ] B4.2 — Authorization pipeline (limits, status, sanctions stub, fraud stub, liquidity stub)
 - [ ] B4.3 — Structured response code taxonomy (success/retryable/terminal/ambiguous)
 - [ ] B4.4 — `modules/routing/` (BIN routing, hot reload)
