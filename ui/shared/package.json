@@ -1,0 +1,28 @@
+{
+  "name": "@sika/shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".":              "./index.js",
+    "./tokens":       "./design-tokens.js",
+    "./tailwind":     "./tailwind.preset.js",
+    "./format":       "./format.js",
+    "./status-map":   "./status-map.js",
+    "./components":   "./components/index.js",
+    "./api":          "./api/index.js",
+    "./api/slices":   "./api/slices/index.js"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^2.2.7",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.453.0",
+    "react": "^18.3.1",
+    "react-redux": "^9.1.2"
+  },
+  "peerDependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

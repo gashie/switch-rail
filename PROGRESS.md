@@ -127,14 +127,20 @@ Spec: written when Phase 1 ends.
 
 ---
 
-## Phase 10 — Operations, observability, citizen access (autonomous)
+## Phase 10 — UI: operator + participant + citizen (autonomous)
 
-- [ ] B10.1 — `modules/ops-dashboard/` (live TPS, latency P50/P95/P99, errors per participant, settlement positions)
-- [ ] B10.2 — Per-participant SLA scorecards
-- [ ] B10.3 — `modules/regulator-console/` (BoG/FIC direct query, AML drill-down, audit log streaming)
-- [ ] B10.4 — `modules/public-status/` (citizen-facing status page, per-participant uptime)
-- [ ] B10.5 — `modules/ussd-gateway/` (defined short-code interface, every participant must support)
-- [ ] B10.6 — `modules/developer-portal/` (self-service onboarding, sandbox parity, force-fail accounts, SDKs link, RFC process) + Phase 10 final gate
+- [x] B10.1 — Design tokens, Tailwind preset, fonts, format helpers, status map, workspace
+- [ ] B10.2 — Component library part 1 (12 primitives)
+- [ ] B10.3 — Component library part 2 (composites + RTK Query slices)
+- [ ] B10.4 — Operator app shell + Transactions reference page
+- [ ] B10.5 — Operator dashboard + fraud + network graph + rule packs
+- [ ] B10.6 — Operator settlement + EOD + reconciliation + ledger + liquidity
+- [ ] B10.7 — Operator disputes + fast-track + reversals
+- [ ] B10.8 — Operator cross-border + FX + foreign rails + travel rule
+- [ ] B10.9 — Participant Portal app
+- [ ] B10.10 — Citizen status app + ops-dashboard + regulator-console + public-status + ussd-gateway
+- [ ] B10.11 — Developer Portal + OpenAPI generator
+- [ ] B10.12 — Phase 10 exit gate (demo + Lighthouse)
 
 ---
 

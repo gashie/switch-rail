@@ -14,7 +14,11 @@
     "reset": "node scripts/reset.js",
     "test": "vitest run",
     "lint": "eslint .",
-    "check-boundaries": "node scripts/check-boundaries.js"
+    "check-boundaries": "node scripts/check-boundaries.js",
+    "ui:operator": "pnpm --filter @sika/operator dev",
+    "ui:participant": "pnpm --filter @sika/participant dev",
+    "ui:citizen": "pnpm --filter @sika/citizen dev",
+    "ui:build": "pnpm --filter @sika/operator build && pnpm --filter @sika/participant build && pnpm --filter @sika/citizen build"
   },
   "dependencies": {
     "argon2": "^0.41.1",
