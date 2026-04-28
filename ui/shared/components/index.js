@@ -20,3 +20,4 @@ export { EmptyState } from './EmptyState.jsx';
 export { PageHeader } from './PageHeader.jsx';
 export { FiltersBar } from './FiltersBar.jsx';
 export { Pagination } from './Pagination.jsx';
+export { AuthGate } from './AuthGate.jsx';
