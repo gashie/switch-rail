@@ -138,7 +138,7 @@ Spec: written when Phase 1 ends.
 - [x] B10.7 — Operator disputes + fast-track + reversals
 - [x] B10.8 — Operator cross-border + FX + foreign rails + travel rule
 - [x] B10.9 — Participant Portal app
-- [ ] B10.10 — Citizen status app + ops-dashboard + regulator-console + public-status + ussd-gateway
+- [x] B10.10 — Citizen status app + ops-dashboard + regulator-console + public-status + ussd-gateway
 - [ ] B10.11 — Developer Portal + OpenAPI generator
 - [ ] B10.12 — Phase 10 exit gate (demo + Lighthouse)
 
@@ -147,6 +147,6 @@ Spec: written when Phase 1 ends.
 ## Status
 
 - **Current phase:** 10 — UI (in progress)
-- **Current block:** B10.5 done — Dashboard/Fraud (cases+rules+sanctions tabs)/Network graph/Participants pages wired to RTK Query
-- **Tests passing:** 853 (779 backend + 74 ui/shared)
-- **Migrations applied:** 48
+- **Current block:** B10.10 done — citizen status app + 4 new backend modules + migration 0049
+- **Tests passing:** 866+ (792 backend + 74 ui/shared)
+- **Migrations applied:** 49

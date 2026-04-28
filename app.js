@@ -52,6 +52,10 @@ import { crossborderFxRoutes } from './modules/crossborder-fx/index.js';
 import { crossborderTxRoutes } from './modules/crossborder-tx/index.js';
 import { crossborderTravelRuleRoutes } from './modules/crossborder-travel-rule/index.js';
 import { settlementAssetsRoutes } from './modules/settlement-assets/index.js';
+import { opsDashboardRoutes } from './modules/ops-dashboard/index.js';
+import { regulatorConsoleRoutes } from './modules/regulator-console/index.js';
+import { publicStatusRoutes } from './modules/public-status/index.js';
+import { ussdGatewayRoutes } from './modules/ussd-gateway/index.js';
 
 export const buildApp = () => {
   const app = express();
@@ -116,6 +120,11 @@ export const buildApp = () => {
   app.use('/crossborder-tx', crossborderTxRoutes);
   app.use('/crossborder-travel-rule', crossborderTravelRuleRoutes);
   app.use('/settlement-assets', settlementAssetsRoutes);
+  // Phase 10 — UI-facing ops modules.
+  app.use('/ops-dashboard', opsDashboardRoutes);
+  app.use('/regulator-console', regulatorConsoleRoutes);
+  app.use('/public-status', publicStatusRoutes);
+  app.use('/ussd', ussdGatewayRoutes);
   app.use(errorHandler);
 
   return app;

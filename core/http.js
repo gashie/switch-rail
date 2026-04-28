@@ -30,6 +30,13 @@ export const validateQuery = (schema) => (req, _res, next) => {
 
 export const sendOk = (res, data, status = 200) => res.status(status).json(ok(data));
 
+// Plain-text response. Used by adapters that talk to upstreams which expect
+// a non-JSON response (USSD aggregators, certain SWIFT callback proxies,
+// ...). Controllers should use this instead of calling res.* directly so
+// the no-res-methods-in-controller boundary stays clean.
+export const sendText = (res, text, status = 200) =>
+  res.status(status).set('content-type', 'text/plain; charset=utf-8').send(text);
+
 const SESSION_COOKIE_DEFAULTS = Object.freeze({
   httpOnly: true,
   sameSite: 'lax',

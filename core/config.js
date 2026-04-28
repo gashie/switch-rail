@@ -88,5 +88,10 @@ export const config = Object.freeze({
   foreignRailTimeoutMs: Number(process.env.FOREIGN_RAIL_TIMEOUT_MS || 5000),
   // Phase 4: when running tests we want short timeouts; production demo uses
   // the full 10s/2s budgets. Override with TX_TEST_MODE=true.
-  txTestMode: (process.env.TX_TEST_MODE || 'false') === 'true'
+  txTestMode: (process.env.TX_TEST_MODE || 'false') === 'true',
+  // Phase 10 — UI-facing ops modules
+  opsDashboardPort: Number(process.env.OPS_DASHBOARD_PORT || 4901),
+  regulatorConsolePort: Number(process.env.REGULATOR_CONSOLE_PORT || 4902),
+  publicStatusPort: Number(process.env.PUBLIC_STATUS_PORT || 4903),
+  ussdGatewayPort: Number(process.env.USSD_GATEWAY_PORT || 4904)
 });
