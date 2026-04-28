@@ -1,5 +1,6 @@
 import { AppError } from '../../core/errors.js';
 import { envelopeSchema } from './schema.js';
+import { validateCrossBorderTiming } from './schema-crossborder.js';
 
 export const validateEnvelope = (env) => {
   const { error, value } = envelopeSchema.validate(env, {
@@ -8,6 +9,11 @@ export const validateEnvelope = (env) => {
     convert: false
   });
   if (error) return { ok: false, error: error.details };
+  // Phase 9 cross-border timing — wall-clock check Joi can't express.
+  const timingError = validateCrossBorderTiming(value);
+  if (timingError) {
+    return { ok: false, error: [{ message: timingError, path: ['crossBorder', 'fx', 'lockExpiresAt'] }] };
+  }
   return { ok: true, value };
 };
 

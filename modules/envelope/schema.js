@@ -1,11 +1,14 @@
 import Joi from 'joi';
+import { crossBorderSchema } from './schema-crossborder.js';
 
 export const MSG_TYPES = Object.freeze([
   'CRDT_TRF',
   'PMT_STATUS',
   'PMT_RETURN',
   'PMT_REVERSAL',
-  'NAME_ENQ'
+  'NAME_ENQ',
+  // Phase 9 — cross-border credit transfer.
+  'XB_CRDT_TRF'
 ]);
 
 export const SOURCE_FORMATS = Object.freeze([
@@ -83,5 +86,11 @@ export const envelopeSchema = Joi.object({
     .optional(),
   settlementDate: Joi.string().pattern(/^\d{4}-\d{2}-\d{2}$/, 'iso-date').optional(),
   metadata: Joi.object().unknown(true).default({}),
-  signature: signatureSchema.allow(null).optional()
+  signature: signatureSchema.allow(null).optional(),
+  // Phase 9 cross-border extension. Required iff msgType === 'XB_CRDT_TRF'.
+  crossBorder: Joi.alternatives().conditional('msgType', {
+    is: 'XB_CRDT_TRF',
+    then: crossBorderSchema.required(),
+    otherwise: Joi.forbidden()
+  })
 }).unknown(false);

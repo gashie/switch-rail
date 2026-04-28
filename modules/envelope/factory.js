@@ -1,6 +1,7 @@
 import { uuidv7 } from '../../core/uuid.js';
 import { AppError } from '../../core/errors.js';
 import { envelopeSchema } from './schema.js';
+import { validateCrossBorderTiming } from './schema-crossborder.js';
 
 export const freezeEnvelope = (env) => {
   if (env === null || typeof env !== 'object' || Object.isFrozen(env)) return env;
@@ -22,6 +23,12 @@ export const createEnvelope = (input = {}) => {
   });
   if (error) {
     throw new AppError('VALIDATION_FAILED', 'invalid envelope', 400, error.details);
+  }
+  // Phase 9 cross-border timing check — Joi can't easily express "must be in
+  // the future" because timestamps are wall-clock dependent. Enforce here.
+  const timingError = validateCrossBorderTiming(value);
+  if (timingError) {
+    throw new AppError('VALIDATION_FAILED', timingError, 400);
   }
   return freezeEnvelope(value);
 };
