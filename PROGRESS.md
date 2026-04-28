@@ -130,7 +130,7 @@ Spec: written when Phase 1 ends.
 ## Phase 10 — UI: operator + participant + citizen (autonomous)
 
 - [x] B10.1 — Design tokens, Tailwind preset, fonts, format helpers, status map, workspace
-- [ ] B10.2 — Component library part 1 (12 primitives)
+- [x] B10.2 — Component library part 1 (12 primitives)
 - [ ] B10.3 — Component library part 2 (composites + RTK Query slices)
 - [ ] B10.4 — Operator app shell + Transactions reference page
 - [ ] B10.5 — Operator dashboard + fraud + network graph + rule packs
@@ -146,7 +146,7 @@ Spec: written when Phase 1 ends.
 
 ## Status
 
-- **Current phase:** 9 — Cross-border native (DONE)
-- **Current block:** B10.1 (Phase 10 master prompt awaited)
-- **Tests passing:** 779
+- **Current phase:** 10 — UI (in progress)
+- **Current block:** B10.2 done — primitive component library + tests live
+- **Tests passing:** 827 (779 backend + 48 ui/shared)
 - **Migrations applied:** 48
