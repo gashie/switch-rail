@@ -397,3 +397,15 @@ Rail-internal ↔ Rail-internal → direct ledger post (always)
 
 Established by Phase 7 dispute-reserve, ratified by Phase 8 escrow.
 This refinement applies in Phase 9 as well: cross-border legs that touch the rail's nostro/vostro accounts at the central bank go through direct ledger posts, while the participant ↔ rail leg goes through the orchestrator.
+
+Synthesized records for non-directory destinations
+When a transaction's beneficiary cannot exist in the rail's own directory (cross-border to a foreign rail's customer; future scenarios involving white-label aggregators), the authorization pipeline synthesizes a transient active record for the destination and defers identity validation to the destination system.
+Locked rules:
+
+Synthesized records are NEVER persisted to the accounts table.
+They exist only in the RuleContext for the authorization pipeline's lifetime.
+account_status and liquidity checks are skipped for synthesized records (the rail doesn't have liquidity for accounts it doesn't own).
+sanctions and fraud checks DO run — the names and identifiers are screenable regardless of where the account lives.
+The transaction's beneficiary_participant is the foreign rail (or aggregator) participant code, not the underlying customer's home participant.
+
+Future modules that read transactions.beneficiary_account must handle the case where the corresponding accounts row may not exist.
