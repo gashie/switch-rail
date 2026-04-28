@@ -9,7 +9,9 @@ import { Participants } from './pages/Participants.jsx';
 import { Settlement } from './pages/Settlement.jsx';
 import { Eod } from './pages/Eod.jsx';
 import { Audit } from './pages/Audit.jsx';
-import { Disputes, Crossborder, NotFound } from './pages/stubs.jsx';
+import { Disputes } from './pages/Disputes.jsx';
+import { Crossborder } from './pages/Crossborder.jsx';
+import { NotFound } from './pages/stubs.jsx';
 
 export const router = createBrowserRouter([
   {
