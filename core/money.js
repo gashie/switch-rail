@@ -107,6 +107,54 @@ export const Money = Object.freeze({
   }
 });
 
+// Cross-currency minor-unit conversion. Phase 9 addition (B9.2).
+//
+//   payMinor      BigInt minor units in the pay currency
+//   payCurrency   ISO 4217 code, e.g. 'GHS'
+//   receiveCurrency ISO 4217 code, e.g. 'NGN'
+//   rate          decimal string, e.g. '15.42'
+//                 means: 1 pay-major-unit = `rate` receive-major-units
+//
+// Returns BigInt minor units in the receive currency. Round half-down,
+// favoring the rail conservatively. The math:
+//
+//   receiveMinor = floor( (payMinor * mantissa) * 10^(recvDigits - payDigits)
+//                          / 10^rateScale )
+//
+// where mantissa is the rate parsed without its decimal point and rateScale
+// is the number of fractional digits in the rate string. For zero-decimal
+// pairs (e.g. JPY=0 receive) the formula still works because adjustDigits
+// becomes negative and we shift the numerator down.
+export const convertMinor = ({ payMinor, payCurrency, receiveCurrency, rate }) => {
+  const payDigits = minorUnitsOf(payCurrency);
+  const recvDigits = minorUnitsOf(receiveCurrency);
+  const pay = coerceMinor(payMinor);
+  if (typeof rate !== 'string' || !/^\d+(\.\d+)?$/.test(rate)) {
+    throw new Error(`invalid rate decimal string: ${rate}`);
+  }
+  const [intPart, fracPart = ''] = rate.split('.');
+  const rateScale = fracPart.length;
+  const mantissa = BigInt(intPart + fracPart);
+  if (mantissa === 0n) {
+    throw new Error('rate must be > 0');
+  }
+  const adjust = recvDigits - payDigits;
+  // Combined exponent we still need to apply to the numerator (positive
+  // means multiply, negative means divide).
+  const combinedExp = adjust - rateScale;
+  const numerator = pay * mantissa;
+  if (combinedExp >= 0) {
+    return numerator * (10n ** BigInt(combinedExp));
+  }
+  const denom = 10n ** BigInt(-combinedExp);
+  // Floor division. BigInt's `/` truncates toward zero, which equals floor
+  // for non-negative inputs (the only case we expect for FX amounts).
+  return numerator / denom;
+};
+
+// Convenience: format a rate-driven preview without persisting.
+export const previewConversion = (params) => convertMinor(params);
+
 export const format = (money) => {
   const u = minorUnitsOf(money.currency);
   if (u === 0) return `${money.minor.toString()} ${money.currency}`;
