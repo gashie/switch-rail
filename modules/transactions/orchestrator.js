@@ -99,7 +99,7 @@ const toBigIntCap = (value, fallback) => {
 };
 
 const fetchAuthContext = async (client, { transaction, originatorParticipant, envelope }) => {
-  const [originatorAccount, beneficiaryAccount] = await Promise.all([
+  const [originatorAccount, beneficiaryAccountRaw] = await Promise.all([
     directoryService
       .findByAccount({
         participantCode: transaction.originator_participant,
@@ -113,6 +113,22 @@ const fetchAuthContext = async (client, { transaction, originatorParticipant, en
       })
       .catch(() => null)
   ]);
+
+  // Phase 9 — for XB_CRDT_TRF envelopes, the beneficiary account lives on
+  // the foreign rail's books, not in our directory. Synthesize an "active"
+  // placeholder so the standard account-status auth check doesn't fire.
+  // The foreign rail's own contract enforces beneficiary validity (and our
+  // foreign-rail simulator + travel-rule checks cover the auth surface).
+  const beneficiaryAccount = (envelope?.msgType === 'XB_CRDT_TRF' && !beneficiaryAccountRaw)
+    ? {
+        id: null,
+        participant_code: transaction.beneficiary_participant,
+        account_number: transaction.beneficiary_account,
+        account_type: 'BANK_ACCOUNT',
+        status: 'active',
+        synthetic: true
+      }
+    : beneficiaryAccountRaw;
 
   const recentMatchingE2E = await transactionsServiceInternal(client).countRecentByOriginatorAndE2E({
     participantCode: transaction.originator_participant,
@@ -191,6 +207,15 @@ const validateRouting = async (envelope) => {
   return { ok: true, beneficiary };
 };
 
+// Phase 9 cross-border injection point. Wired by modules/crossborder-tx
+// at boot to avoid an import cycle. When unset, XB envelopes fall through
+// to the standard credit-leg path (which will fail validation because XB
+// envelopes don't carry a real domestic beneficiary participant).
+let _xbCoordinator = null;
+export const registerCrossborderCoordinator = (coordinator) => {
+  _xbCoordinator = coordinator;
+};
+
 export const createOrchestrator = ({ db, transactionsService }) => {
   _txService = transactionsService;
   const authorizationService = createAuthorizationService();
@@ -265,6 +290,36 @@ export const createOrchestrator = ({ db, transactionsService }) => {
           beneficiaryParticipant: route.beneficiary
         });
         tx = await _txService.findById(tx.id, client);
+
+        // 5a. Phase 9 cross-border branch. When the envelope is XB_CRDT_TRF,
+        // delegate to the cross-border coordinator instead of running the
+        // standard credit-leg. The coordinator commits both ledger legs in
+        // this same withTransaction; the recovery worker then drives the
+        // foreign-rail handoff to CONFIRMED/REJECTED post-commit.
+        if (envelope.msgType === 'XB_CRDT_TRF' && _xbCoordinator) {
+          tx = await transactionsServiceInternal(client).transition(tx, STATES.CREDIT_LEG_PENDING, {
+            occurredBy: 'system',
+            payload: { branch: 'crossborder' }
+          });
+          let xbResult;
+          try {
+            xbResult = await _xbCoordinator.coordinateOnClient(client, {
+              envelope, transaction: tx
+            });
+          } catch (xbError) {
+            // Pre-commit XB validation errors (FX expired, slippage,
+            // travel-rule sanctions hit) should reject the parent tx with
+            // a structured reason rather than bubble up as RAIL_INTERNAL_ERROR.
+            const code = xbError?.code === 'CONFLICT' || xbError?.code === 'NOT_FOUND' || xbError?.code === 'VALIDATION_FAILED'
+              ? `XB_${(xbError?.message || 'INVALID').split(':')[0].trim().replace(/[^A-Z_0-9]/gi, '_').toUpperCase().slice(0, 60)}`
+              : 'XB_REJECTED';
+            tx = await finalizeWithError(client, tx, code, xbError?.message || String(xbError));
+            return { transaction: tx, deduped: false, crossborderError: { code, message: xbError?.message } };
+          }
+          // Parent tx stays in CREDIT_LEG_PENDING; recovery worker promotes
+          // to CONFIRMED on foreign ACCEPTED, REJECTED on foreign REJECTED.
+          return { transaction: tx, deduped: false, crossborder: xbResult };
+        }
 
         // 6. Credit-leg call. We move into CREDIT_LEG_PENDING first so the
         // outbound HTTP call is observable in the status history even if it

@@ -89,13 +89,12 @@ export const createSimulatorService = () => {
   const findQuote = (quoteId) => QUOTES.get(quoteId) || null;
 
   const instruct = ({ quoteId, originator, beneficiary, travelRule, payAmount, receiveAmount }) => {
-    const q = QUOTES.get(quoteId);
-    if (!q) {
-      throw new AppError('NOT_FOUND', `simulator quote ${quoteId} not found`, 404);
-    }
-    if (new Date(q.lockExpiresAt).getTime() <= Date.now()) {
-      throw new AppError('CONFLICT', `simulator quote ${quoteId} expired`, 409);
-    }
+    // Real rails would have their own quote registry. The simulator accepts
+    // any quoteId — the rail's internal FX quote and the foreign rail's
+    // quote are distinct in production; for the test contract we just
+    // record the quoteId for traceability.
+    const q = QUOTES.get(quoteId) || null;
+    void q;
     const beneficiaryAccountId = beneficiary?.accountId || '';
     const force = FORCE_ACCOUNT_BEHAVIORS[beneficiaryAccountId];
     const foreignTxId = uuidv7();

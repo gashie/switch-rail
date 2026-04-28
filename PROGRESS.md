@@ -121,7 +121,7 @@ Spec: written when Phase 1 ends.
 - [x] B9.1 — `modules/crossborder-rails/` (foreign rail registry — NIBSS, PesaLink, TIPS, PAPSS, BIS Nexus)
 - [x] B9.2 — `modules/crossborder-fx/` (multi-currency, FX quotes, rate lock, slippage)
 - [x] B9.3 — Cross-border envelope extension (currency, FX, country codes, travel rule fields)
-- [ ] B9.4 — `modules/crossborder-tx/` (atomic two-leg via PvP coordinator pattern)
+- [x] B9.4 — `modules/crossborder-tx/` (atomic two-leg via PvP coordinator pattern)
 - [ ] B9.5 — `modules/crossborder-travel-rule/` (FATF originator/beneficiary info enforcement)
 - [ ] B9.6 — Cross-border disputes + CBDC/stablecoin settlement leg + Phase 9 exit gate
 

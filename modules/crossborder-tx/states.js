@@ -1,0 +1,16 @@
+export const STATES = Object.freeze({
+  INITIATED:           'INITIATED',
+  LEG_1_COMMITTED:     'LEG_1_COMMITTED',
+  FOREIGN_INSTRUCTING: 'FOREIGN_INSTRUCTING',
+  FOREIGN_ACCEPTED:    'FOREIGN_ACCEPTED',
+  CONFIRMED:           'CONFIRMED',
+  REJECTED:            'REJECTED',
+  PENDING_FOREIGN:     'PENDING_FOREIGN',
+  FAILED:              'FAILED'
+});
+
+export const TERMINAL_STATES = Object.freeze(new Set([
+  STATES.CONFIRMED, STATES.REJECTED, STATES.FAILED
+]));
+
+export const isTerminal = (s) => TERMINAL_STATES.has(s);

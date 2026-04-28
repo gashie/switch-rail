@@ -12,3 +12,4 @@ export {
   canTransition
 } from './states.js';
 export { createTransactionsModel } from './model.js';
+export { registerCrossborderCoordinator } from './orchestrator.js';
