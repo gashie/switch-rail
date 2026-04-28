@@ -18,7 +18,8 @@
     "ui:operator": "pnpm --filter @sika/operator dev",
     "ui:participant": "pnpm --filter @sika/participant dev",
     "ui:citizen": "pnpm --filter @sika/citizen dev",
-    "ui:build": "pnpm --filter @sika/operator build && pnpm --filter @sika/participant build && pnpm --filter @sika/citizen build"
+    "ui:build": "pnpm --filter @sika/operator build && pnpm --filter @sika/participant build && pnpm --filter @sika/citizen build",
+    "openapi:generate": "node scripts/generate-openapi.js"
   },
   "dependencies": {
     "argon2": "^0.41.1",

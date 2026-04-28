@@ -11,6 +11,7 @@ import { Eod } from './pages/Eod.jsx';
 import { Audit } from './pages/Audit.jsx';
 import { Disputes } from './pages/Disputes.jsx';
 import { Crossborder } from './pages/Crossborder.jsx';
+import { DevPortal } from './pages/DevPortal.jsx';
 import { NotFound } from './pages/stubs.jsx';
 
 export const router = createBrowserRouter([
@@ -29,6 +30,7 @@ export const router = createBrowserRouter([
       { path: 'disputes',                  element: <Disputes /> },
       { path: 'crossborder',               element: <Crossborder /> },
       { path: 'audit',                     element: <Audit /> },
+      { path: 'dev-portal',                element: <DevPortal /> },
       { path: '*',                         element: <NotFound /> }
     ]
   }

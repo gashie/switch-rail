@@ -139,7 +139,7 @@ Spec: written when Phase 1 ends.
 - [x] B10.8 — Operator cross-border + FX + foreign rails + travel rule
 - [x] B10.9 — Participant Portal app
 - [x] B10.10 — Citizen status app + ops-dashboard + regulator-console + public-status + ussd-gateway
-- [ ] B10.11 — Developer Portal + OpenAPI generator
+- [x] B10.11 — Developer Portal + OpenAPI generator
 - [ ] B10.12 — Phase 10 exit gate (demo + Lighthouse)
 
 ---

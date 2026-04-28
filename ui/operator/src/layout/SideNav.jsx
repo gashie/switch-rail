@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, ArrowLeftRight, ShieldAlert, Users, Coins,
-  Calendar, Gavel, Globe2, ScrollText, Network
+  Calendar, Gavel, Globe2, ScrollText, Network, Code2
 } from 'lucide-react';
 
 const NAV = [
@@ -15,7 +15,8 @@ const NAV = [
   { to: '/eod',          label: 'EOD',           Icon: Calendar },
   { to: '/disputes',     label: 'Disputes',      Icon: Gavel },
   { to: '/crossborder',  label: 'Cross-border',  Icon: Globe2 },
-  { to: '/audit',        label: 'Audit',         Icon: ScrollText }
+  { to: '/audit',        label: 'Audit',         Icon: ScrollText },
+  { to: '/dev-portal',   label: 'Developer',     Icon: Code2 }
 ];
 
 export const SideNav = () => (
