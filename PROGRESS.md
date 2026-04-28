@@ -123,7 +123,7 @@ Spec: written when Phase 1 ends.
 - [x] B9.3 — Cross-border envelope extension (currency, FX, country codes, travel rule fields)
 - [x] B9.4 — `modules/crossborder-tx/` (atomic two-leg via PvP coordinator pattern)
 - [x] B9.5 — `modules/crossborder-travel-rule/` (FATF originator/beneficiary info enforcement)
-- [ ] B9.6 — Cross-border disputes + CBDC/stablecoin settlement leg + Phase 9 exit gate
+- [x] B9.6 — Cross-border disputes + CBDC/stablecoin settlement leg + Phase 9 exit gate
 
 ---
 
@@ -140,7 +140,7 @@ Spec: written when Phase 1 ends.
 
 ## Status
 
-- **Current phase:** 8 — Overlay services (DONE)
-- **Current block:** B9.1 (Phase 9 master prompt awaited)
-- **Tests passing:** 725
-- **Migrations applied:** 43
+- **Current phase:** 9 — Cross-border native (DONE)
+- **Current block:** B10.1 (Phase 10 master prompt awaited)
+- **Tests passing:** 779
+- **Migrations applied:** 48

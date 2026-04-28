@@ -17,7 +17,11 @@ export const REASON_CODES = Object.freeze({
   MANDATE_UNAUTHORIZED:    'MANDATE_UNAUTHORIZED',
   MANDATE_EXCESS:          'MANDATE_EXCESS',
   REFUND_DUPLICATE:        'REFUND_DUPLICATE',
-  ESCROW_RELEASE_DISPUTED: 'ESCROW_RELEASE_DISPUTED'
+  ESCROW_RELEASE_DISPUTED: 'ESCROW_RELEASE_DISPUTED',
+  // Phase 9 — cross-border-specific dispute reason codes.
+  XB_FOREIGN_REJECT:          'XB_FOREIGN_REJECT',
+  XB_FX_DISPUTE:              'XB_FX_DISPUTE',
+  XB_SETTLEMENT_ASSET_FAILED: 'XB_SETTLEMENT_ASSET_FAILED'
 });
 
 // Filing window: how long after the original CONFIRMED transaction a dispute
@@ -38,7 +42,13 @@ export const SLA_WINDOWS = Object.freeze({
   [REASON_CODES.MANDATE_UNAUTHORIZED]:    { fileWithinDays: 60,  responseDays: 5, autoResolvable: null },
   [REASON_CODES.MANDATE_EXCESS]:          { fileWithinDays: 60,  responseDays: 5, autoResolvable: 'r-mandate-excess' },
   [REASON_CODES.REFUND_DUPLICATE]:        { fileWithinDays: 90,  responseDays: 3, autoResolvable: 'r-refund-duplicate' },
-  [REASON_CODES.ESCROW_RELEASE_DISPUTED]: { fileWithinDays: 60,  responseDays: 7, autoResolvable: null }
+  [REASON_CODES.ESCROW_RELEASE_DISPUTED]: { fileWithinDays: 60,  responseDays: 7, autoResolvable: null },
+  // Phase 9 — cross-border. Wider response windows reflect the foreign-rail
+  // round-trip; auto-resolvers are deferred to Phase 11+ (foreign-rail
+  // operator dashboards aren't yet productionized).
+  [REASON_CODES.XB_FOREIGN_REJECT]:          { fileWithinDays: 90,  responseDays: 10, autoResolvable: null },
+  [REASON_CODES.XB_FX_DISPUTE]:              { fileWithinDays: 30,  responseDays: 7,  autoResolvable: null },
+  [REASON_CODES.XB_SETTLEMENT_ASSET_FAILED]: { fileWithinDays: 60,  responseDays: 10, autoResolvable: null }
 });
 
 export const OUTCOMES = Object.freeze({

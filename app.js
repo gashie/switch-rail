@@ -44,6 +44,14 @@ import { overlaysCashoutRoutes } from './modules/overlays-cashout/index.js';
 import { overlaysRefundsRoutes } from './modules/overlays-refunds/index.js';
 import { overlaysEscrowRoutes } from './modules/overlays-escrow/index.js';
 import { overlaysSplitRoutes } from './modules/overlays-split/index.js';
+import {
+  crossborderRailsRoutes,
+  crossborderSimulatorRoutes
+} from './modules/crossborder-rails/index.js';
+import { crossborderFxRoutes } from './modules/crossborder-fx/index.js';
+import { crossborderTxRoutes } from './modules/crossborder-tx/index.js';
+import { crossborderTravelRuleRoutes } from './modules/crossborder-travel-rule/index.js';
+import { settlementAssetsRoutes } from './modules/settlement-assets/index.js';
 
 export const buildApp = () => {
   const app = express();
@@ -101,6 +109,13 @@ export const buildApp = () => {
   app.use('/refunds-overlay', overlaysRefundsRoutes);
   app.use('/escrow', overlaysEscrowRoutes);
   app.use('/splits', overlaysSplitRoutes);
+  // Phase 9 — cross-border native.
+  app.use('/crossborder-rails', crossborderRailsRoutes);
+  app.use('/simulator-foreign', crossborderSimulatorRoutes);
+  app.use('/fx', crossborderFxRoutes);
+  app.use('/crossborder-tx', crossborderTxRoutes);
+  app.use('/crossborder-travel-rule', crossborderTravelRuleRoutes);
+  app.use('/settlement-assets', settlementAssetsRoutes);
   app.use(errorHandler);
 
   return app;
