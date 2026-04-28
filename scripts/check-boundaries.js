@@ -63,9 +63,11 @@ for (const f of jsFiles) {
   }
 }
 
-// Rule: no-process-env-outside-config
+// Rule: no-process-env-outside-config — applies to backend rail code only.
+// UI workspaces (ui/**) are Vite build targets, not rail modules.
 for (const f of jsFiles) {
   if (rel(f) === 'core/config.js') continue;
+  if (rel(f).startsWith('ui/')) continue;
   if (/\bprocess\.env\b/.test(stripComments(readFileSync(f, 'utf8')))) {
     report('no-process-env-outside-config', f, 'environment variable reference');
   }

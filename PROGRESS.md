@@ -132,7 +132,7 @@ Spec: written when Phase 1 ends.
 - [x] B10.1 — Design tokens, Tailwind preset, fonts, format helpers, status map, workspace
 - [x] B10.2 — Component library part 1 (12 primitives)
 - [x] B10.3 — Component library part 2 (composites + RTK Query slices)
-- [ ] B10.4 — Operator app shell + Transactions reference page
+- [x] B10.4 — Operator app shell + Transactions reference page
 - [ ] B10.5 — Operator dashboard + fraud + network graph + rule packs
 - [ ] B10.6 — Operator settlement + EOD + reconciliation + ledger + liquidity
 - [ ] B10.7 — Operator disputes + fast-track + reversals
@@ -147,6 +147,6 @@ Spec: written when Phase 1 ends.
 ## Status
 
 - **Current phase:** 10 — UI (in progress)
-- **Current block:** B10.3 done — composites + RTK Query slices + toast slice live
+- **Current block:** B10.4 done — operator shell, AppLayout/SideNav/TopBar, Transactions reference page wired to RTK Query, contract written
 - **Tests passing:** 853 (779 backend + 74 ui/shared)
 - **Migrations applied:** 48

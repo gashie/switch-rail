@@ -14,20 +14,22 @@ export const transactionsApi = sikaApi.injectEndpoints({
   endpoints: (b) => ({
     listTransactions: b.query({
       query: (params) => `/transactions${buildQs(params)}`,
-      providesTags: (result) =>
-        result?.items
+      providesTags: (result) => {
+        const rows = result?.rows || result?.items;
+        return rows
           ? [
-              ...result.items.map((t) => ({ type: 'Transactions', id: t.id })),
+              ...rows.map((t) => ({ type: 'Transactions', id: t.id })),
               { type: 'Transactions', id: 'LIST' }
             ]
-          : [{ type: 'Transactions', id: 'LIST' }]
+          : [{ type: 'Transactions', id: 'LIST' }];
+      }
     }),
     getTransaction: b.query({
       query: (id) => `/transactions/${id}`,
       providesTags: (_r, _e, id) => [{ type: 'Transactions', id }]
     }),
     listAuthEvents: b.query({
-      query: (txId) => `/transactions/${txId}/auth-events`,
+      query: (txId) => `/transactions/${txId}/history`,
       providesTags: (_r, _e, txId) => [{ type: 'Transactions', id: `${txId}-events` }]
     }),
     forceRejectTransaction: b.mutation({
