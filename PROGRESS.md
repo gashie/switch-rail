@@ -118,7 +118,7 @@ Spec: written when Phase 1 ends.
 
 ## Phase 9 — Cross-border native (autonomous)
 
-- [ ] B9.1 — `modules/crossborder-rails/` (foreign rail registry — NIBSS, PesaLink, TIPS, PAPSS, BIS Nexus)
+- [x] B9.1 — `modules/crossborder-rails/` (foreign rail registry — NIBSS, PesaLink, TIPS, PAPSS, BIS Nexus)
 - [ ] B9.2 — `modules/crossborder-fx/` (multi-currency, FX quotes, rate lock, slippage)
 - [ ] B9.3 — Cross-border envelope extension (currency, FX, country codes, travel rule fields)
 - [ ] B9.4 — `modules/crossborder-tx/` (atomic two-leg via PvP coordinator pattern)

@@ -77,6 +77,15 @@ export const config = Object.freeze({
   cashoutOtpExpiresInMinutes: Number(process.env.CASHOUT_OTP_EXPIRES_IN_MINUTES || 15),
   cashoutOtpMaxAttempts: Number(process.env.CASHOUT_OTP_MAX_ATTEMPTS || 3),
   refundWindowDays: Number(process.env.REFUND_WINDOW_DAYS || 365),
+  // Phase 9 — cross-border native
+  crossborderRailsPort: Number(process.env.CROSSBORDER_RAILS_PORT || 4801),
+  crossborderFxPort: Number(process.env.CROSSBORDER_FX_PORT || 4802),
+  crossborderTxPort: Number(process.env.CROSSBORDER_TX_PORT || 4803),
+  crossborderTravelRulePort: Number(process.env.CROSSBORDER_TRAVEL_RULE_PORT || 4804),
+  settlementAssetsPort: Number(process.env.SETTLEMENT_ASSETS_PORT || 4805),
+  fxLockSeconds: Number(process.env.FX_LOCK_SECONDS || 60),
+  fxSlippageBps: Number(process.env.FX_SLIPPAGE_BPS || 50),
+  foreignRailTimeoutMs: Number(process.env.FOREIGN_RAIL_TIMEOUT_MS || 5000),
   // Phase 4: when running tests we want short timeouts; production demo uses
   // the full 10s/2s budgets. Override with TX_TEST_MODE=true.
   txTestMode: (process.env.TX_TEST_MODE || 'false') === 'true'
