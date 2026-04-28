@@ -134,7 +134,7 @@ Spec: written when Phase 1 ends.
 - [x] B10.3 — Component library part 2 (composites + RTK Query slices)
 - [x] B10.4 — Operator app shell + Transactions reference page
 - [x] B10.5 — Operator dashboard + fraud + network graph + rule packs
-- [ ] B10.6 — Operator settlement + EOD + reconciliation + ledger + liquidity
+- [x] B10.6 — Operator settlement + EOD + reconciliation + ledger + liquidity
 - [ ] B10.7 — Operator disputes + fast-track + reversals
 - [ ] B10.8 — Operator cross-border + FX + foreign rails + travel rule
 - [ ] B10.9 — Participant Portal app

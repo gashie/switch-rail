@@ -6,9 +6,10 @@ import { TransactionDetail } from './pages/TransactionDetail.jsx';
 import { Fraud } from './pages/Fraud.jsx';
 import { Network } from './pages/Network.jsx';
 import { Participants } from './pages/Participants.jsx';
-import {
-  Settlement, Eod, Disputes, Crossborder, Audit, NotFound
-} from './pages/stubs.jsx';
+import { Settlement } from './pages/Settlement.jsx';
+import { Eod } from './pages/Eod.jsx';
+import { Audit } from './pages/Audit.jsx';
+import { Disputes, Crossborder, NotFound } from './pages/stubs.jsx';
 
 export const router = createBrowserRouter([
   {
