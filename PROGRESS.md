@@ -140,13 +140,13 @@ Spec: written when Phase 1 ends.
 - [x] B10.9 — Participant Portal app
 - [x] B10.10 — Citizen status app + ops-dashboard + regulator-console + public-status + ussd-gateway
 - [x] B10.11 — Developer Portal + OpenAPI generator
-- [ ] B10.12 — Phase 10 exit gate (demo + Lighthouse)
+- [x] B10.12 — Phase 10 exit gate (demo + Lighthouse)
 
 ---
 
 ## Status
 
-- **Current phase:** 10 — UI (in progress)
-- **Current block:** B10.10 done — citizen status app + 4 new backend modules + migration 0049
-- **Tests passing:** 866+ (792 backend + 74 ui/shared)
+- **Current phase:** 10 — UI (DONE)
+- **Current block:** B10.12 done — full Phase 10 exit gate passes (demo script + smoke test + lint + boundaries clean)
+- **Tests passing:** 871 across 88 files (786 backend + 85 ui/shared + smoke)
 - **Migrations applied:** 49
