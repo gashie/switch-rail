@@ -3,9 +3,11 @@ import { AppLayout } from './layout/AppLayout.jsx';
 import { Dashboard } from './pages/Dashboard.jsx';
 import { Transactions } from './pages/Transactions.jsx';
 import { TransactionDetail } from './pages/TransactionDetail.jsx';
+import { Fraud } from './pages/Fraud.jsx';
+import { Network } from './pages/Network.jsx';
+import { Participants } from './pages/Participants.jsx';
 import {
-  Fraud, Network, Participants, Settlement, Eod, Disputes,
-  Crossborder, Audit, NotFound
+  Settlement, Eod, Disputes, Crossborder, Audit, NotFound
 } from './pages/stubs.jsx';
 
 export const router = createBrowserRouter([
