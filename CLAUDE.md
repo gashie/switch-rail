@@ -385,3 +385,15 @@ The standard fraud, sanctions, liquidity, and ledger flows
 The standard dispute reason codes (with overlay-specific reasons added to the locked taxonomy)
 
 If an overlay seems to need to bypass the orchestrator, that's an ESCALATION — the overlay should be implemented as a chain of standard transactions, not as a parallel money-movement path.
+
+Overlay rule refinement: rail-internal account legs
+The overlay rule from Phase 7 ("overlays go through the orchestrator") has one defined exception: when one side of the money movement is a rail-internal account (RAIL_ESCROW, RAIL_DISPUTE_RESERVE, RAIL_FEE_REVENUE, RAIL_SUSPENSE, RAIL_REVERSAL, OPERATOR_RTGS_NOSTRO), the operation may post directly via ledgerService.postJournal instead of going through transactions/orchestrator.processTransaction.
+Why: the orchestrator's purpose is participant-to-participant credit-leg coordination — it calls the beneficiary's credit_leg HTTP endpoint and waits for confirmation. There's no participant on the other side of RAIL_ESCROW, so there's no endpoint to call. The orchestrator would have nothing to do.
+The line is sharp:
+
+Participant ↔ Participant → orchestrator (always)
+Participant ↔ Rail-internal account → direct ledger post (always)
+Rail-internal ↔ Rail-internal → direct ledger post (always)
+
+Established by Phase 7 dispute-reserve, ratified by Phase 8 escrow.
+This refinement applies in Phase 9 as well: cross-border legs that touch the rail's nostro/vostro accounts at the central bank go through direct ledger posts, while the participant ↔ rail leg goes through the orchestrator.
