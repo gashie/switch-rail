@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.007.001.14">
+  <FIToFIPmtRvsl>
+    <GrpHdr>
+      <MsgId>SAMPLE-PACS007-001</MsgId>
+      <CreDtTm>2026-04-26T11:30:00Z</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+    </GrpHdr>
+    <TxInf>
+      <RvslId>RVSL-001</RvslId>
+      <OrgnlEndToEndId>E2E-PACS008-001</OrgnlEndToEndId>
+      <OrgnlUETR>019dcad9-0000-7000-8000-000000000001</OrgnlUETR>
+      <RvsdIntrBkSttlmAmt Ccy="GHS">150.00</RvsdIntrBkSttlmAmt>
+      <Dbtr>
+        <Nm>KOFI MENSAH</Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <Id>
+          <Othr>
+            <Id>0123456789</Id>
+          </Othr>
+        </Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId>
+          <BICFI>BANK01GHACX</BICFI>
+        </FinInstnId>
+      </DbtrAgt>
+      <Cdtr>
+        <Nm>AMA OWUSU</Nm>
+      </Cdtr>
+      <CdtrAcct>
+        <Id>
+          <Othr>
+            <Id>9876543210</Id>
+          </Othr>
+        </Id>
+      </CdtrAcct>
+      <CdtrAgt>
+        <FinInstnId>
+          <BICFI>BANK02GHACX</BICFI>
+        </FinInstnId>
+      </CdtrAgt>
+      <RvslRsnInf>
+        <Rsn>
+          <Cd>FRAD</Cd>
+        </Rsn>
+        <AddtlInf>Fraudulent transaction</AddtlInf>
+      </RvslRsnInf>
+    </TxInf>
+  </FIToFIPmtRvsl>
+</Document>

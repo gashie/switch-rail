@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.004.001.15">
+  <PmtRtr>
+    <GrpHdr>
+      <MsgId>SAMPLE-PACS004-001</MsgId>
+      <CreDtTm>2026-04-26T11:00:00Z</CreDtTm>
+      <NbOfTxs>1</NbOfTxs>
+    </GrpHdr>
+    <TxInf>
+      <RtrId>RTR-001</RtrId>
+      <OrgnlEndToEndId>E2E-PACS008-001</OrgnlEndToEndId>
+      <OrgnlUETR>019dcad9-0000-7000-8000-000000000001</OrgnlUETR>
+      <RtrdIntrBkSttlmAmt Ccy="GHS">150.00</RtrdIntrBkSttlmAmt>
+      <Dbtr>
+        <Nm>KOFI MENSAH</Nm>
+      </Dbtr>
+      <DbtrAcct>
+        <Id>
+          <Othr>
+            <Id>0123456789</Id>
+          </Othr>
+        </Id>
+      </DbtrAcct>
+      <DbtrAgt>
+        <FinInstnId>
+          <BICFI>BANK01GHACX</BICFI>
+        </FinInstnId>
+      </DbtrAgt>
+      <Cdtr>
+        <Nm>AMA OWUSU</Nm>
+      </Cdtr>
+      <CdtrAcct>
+        <Id>
+          <Othr>
+            <Id>9876543210</Id>
+          </Othr>
+        </Id>
+      </CdtrAcct>
+      <CdtrAgt>
+        <FinInstnId>
+          <BICFI>BANK02GHACX</BICFI>
+        </FinInstnId>
+      </CdtrAgt>
+      <RtrRsnInf>
+        <Rsn>
+          <Cd>AC04</Cd>
+        </Rsn>
+        <AddtlInf>Account closed</AddtlInf>
+      </RtrRsnInf>
+    </TxInf>
+  </PmtRtr>
+</Document>

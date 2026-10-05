@@ -1,0 +1,27 @@
+{
+  "envelopeId": "01900111-0000-7000-8000-000000000001",
+  "msgVersion": "1.0",
+  "msgType": "CRDT_TRF",
+  "createdAt": "2026-04-26T12:00:00.000Z",
+  "sourceFormat": "REST",
+  "sourceMessageId": "demo-rest-001",
+  "endToEndId": "e2e-rest-001",
+  "idempotencyKey": "phase2-demo-rest-001",
+  "originator": {
+    "participantCode": "BANK01",
+    "accountId": "0123456789",
+    "accountType": "BANK_ACCOUNT",
+    "name": "KOFI MENSAH",
+    "countryCode": "GH"
+  },
+  "beneficiary": {
+    "participantCode": "BANK02",
+    "accountId": "9876543210",
+    "accountType": "BANK_ACCOUNT",
+    "name": "AMA OWUSU",
+    "countryCode": "GH"
+  },
+  "amount": { "value": "150000", "currency": "GHS" },
+  "reference": "INV-2026-001",
+  "remittance": "Phase 2 demo payment"
+}

@@ -1,0 +1,28 @@
+{
+  "envelopeId": "01900000-0000-7000-8000-000000000003",
+  "msgVersion": "1.0",
+  "msgType": "CRDT_TRF",
+  "sourceFormat": "REST",
+  "sourceMessageId": "p4-rest-timeout-001",
+  "endToEndId": "p4-rest-timeout-e2e-001",
+  "idempotencyKey": "p4-rest-timeout-idem-001",
+  "createdAt": "2026-04-26T10:00:00.000Z",
+  "originator": {
+    "participantCode": "DEMO_BANK",
+    "accountId": "1000000001",
+    "accountType": "BANK_ACCOUNT",
+    "name": "Kofi Mensah",
+    "countryCode": "GH"
+  },
+  "beneficiary": {
+    "participantCode": "BANK_TEST",
+    "accountId": "9999000007",
+    "accountType": "BANK_ACCOUNT",
+    "name": "Force Timeout",
+    "countryCode": "GH"
+  },
+  "amount": { "value": "12500", "currency": "GHS" },
+  "reference": "Phase 4 demo — timeout into recovery",
+  "purposeCode": "GDDS",
+  "settlementMethod": "CLRG"
+}

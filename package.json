@@ -1,0 +1,44 @@
+{
+  "name": "sika-rail",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "migrate": "node scripts/migrate.js",
+    "seed": "node scripts/seed.js",
+    "reset": "node scripts/reset.js",
+    "test": "vitest run",
+    "lint": "eslint .",
+    "check-boundaries": "node scripts/check-boundaries.js",
+    "ui:operator": "pnpm --filter @sika/operator dev",
+    "ui:participant": "pnpm --filter @sika/participant dev",
+    "ui:citizen": "pnpm --filter @sika/citizen dev",
+    "ui:build": "pnpm --filter @sika/operator build && pnpm --filter @sika/participant build && pnpm --filter @sika/citizen build",
+    "openapi:generate": "node scripts/generate-openapi.js",
+    "add-credential": "node scripts/add-credential.js"
+  },
+  "dependencies": {
+    "argon2": "^0.41.1",
+    "cookie-parser": "^1.4.7",
+    "csv-parse": "^6.2.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-fileupload": "^1.5.1",
+    "fast-xml-parser": "^5.7.2",
+    "joi": "^17.13.3",
+    "pg": "^8.13.0",
+    "pino": "^9.5.0",
+    "pino-pretty": "^11.3.0",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "eslint": "^9.13.0",
+    "supertest": "^7.0.0",
+    "vitest": "^2.1.4"
+  }
+}
